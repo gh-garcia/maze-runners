@@ -1,0 +1,15 @@
+C:\PROG\maze-runners\alpha\bin\Debug\net8.0\alpha.exe
+C:\PROG\maze-runners\alpha\bin\Debug\net8.0\alpha.deps.json
+C:\PROG\maze-runners\alpha\bin\Debug\net8.0\alpha.runtimeconfig.json
+C:\PROG\maze-runners\alpha\bin\Debug\net8.0\alpha.dll
+C:\PROG\maze-runners\alpha\bin\Debug\net8.0\alpha.pdb
+C:\PROG\maze-runners\alpha\obj\Debug\net8.0\alpha.GeneratedMSBuildEditorConfig.editorconfig
+C:\PROG\maze-runners\alpha\obj\Debug\net8.0\alpha.AssemblyInfoInputs.cache
+C:\PROG\maze-runners\alpha\obj\Debug\net8.0\alpha.AssemblyInfo.cs
+C:\PROG\maze-runners\alpha\obj\Debug\net8.0\alpha.csproj.CoreCompileInputs.cache
+C:\PROG\maze-runners\alpha\obj\Debug\net8.0\alpha.sourcelink.json
+C:\PROG\maze-runners\alpha\obj\Debug\net8.0\alpha.dll
+C:\PROG\maze-runners\alpha\obj\Debug\net8.0\refint\alpha.dll
+C:\PROG\maze-runners\alpha\obj\Debug\net8.0\alpha.pdb
+C:\PROG\maze-runners\alpha\obj\Debug\net8.0\alpha.genruntimeconfig.cache
+C:\PROG\maze-runners\alpha\obj\Debug\net8.0\ref\alpha.dll
