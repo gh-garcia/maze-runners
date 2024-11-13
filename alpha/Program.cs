@@ -1,7 +1,4 @@
-﻿using System.Formats.Asn1;
-using System.Security.Cryptography.X509Certificates;
-
-namespace alpha
+﻿namespace alpha
 {
     public class Board
     {
@@ -12,6 +9,14 @@ namespace alpha
             int x = 0;
             int y = 1;
             BoardDisplay(player1, x, y, board2);
+            
+            while (true)
+            {
+                Console.ReadLine();
+                Console.Clear();
+                y++;
+                BoardDisplay(player1, x, y, board2);
+            }
         }
 
         public static string[,] BoardGeneration()
@@ -31,6 +36,11 @@ namespace alpha
             };
 
             return board;
+        }
+
+        public static void MovePlayer()
+        {
+            
         }
 
         public static void BoardDisplay(string player1, int x, int y, string[,] board)
