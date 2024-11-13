@@ -1,32 +1,57 @@
-﻿namespace alpha
+﻿using System.Formats.Asn1;
+using System.Security.Cryptography.X509Certificates;
+
+namespace alpha
 {
-    class Program
+    public class Board
     {
-        static void Main()
+        public static void Main()
         {
-            int WIDTH = 14;
-            int HEIGHT = 14;
+            string[,] board2 = BoardGeneration();
+            string player1 = "8";
+            int x = 0;
+            int y = 1;
+            BoardDisplay(player1, x, y, board2);
+        }
 
-            string[,] grid = new string[HEIGHT,WIDTH];
-
-            for (int i = 0; i < HEIGHT; i++ )
+        public static string[,] BoardGeneration()
+        {
+            string[,] board = new string[10,10]
             {
-                for (int j = 0; j < WIDTH; j++)
-                {
-                    grid[i,j] = " ";
-                }
-            }
+                {"+"," ","_","_","_","_","_","_","_","+"},
+                {"|"," "," "," "," "," "," "," "," ","|"},
+                {"|"," "," "," "," "," "," "," "," ","|"},
+                {"|"," "," "," "," "," "," "," "," ","|"},
+                {"|"," "," "," "," "," "," "," "," ","|"},
+                {"|"," "," "," "," "," "," "," "," ","|"},
+                {"|"," "," "," "," "," "," "," "," ","|"},
+                {"|"," "," "," "," "," "," "," "," ","|"},
+                {"|"," "," "," "," "," "," "," "," ","|"},
+                {"+","_","_","_","_","_","_","_"," ","+"}
+            };
 
-            for (int i = 0; i < HEIGHT; i++ )
+            return board;
+        }
+
+        public static void BoardDisplay(string player1, int x, int y, string[,] board)
+        {
+            for (int i = 0; i < board.GetLength(0); i++)
             {
-                for (int j = 0; j < WIDTH; j++)
+                for (int j = 0; j < board.GetLength(1) ; j++)
                 {
-                    Console.Write(grid[i, j] + " ");
+                    if(i == x && j == y)
+                    {
+                        System.Console.Write(board[i,j] = player1);
+                    }
+                    else
+                    {
+                    System.Console.Write(board[i,j]);
+                    }
+                    
                 }
-                Console.WriteLine();
+                System.Console.WriteLine();
             }
-            
-            
         }
     }
 }
+

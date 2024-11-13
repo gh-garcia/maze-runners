@@ -13,3 +13,10 @@ C:\PROG\maze-runners\alpha\obj\Debug\net8.0\refint\alpha.dll
 C:\PROG\maze-runners\alpha\obj\Debug\net8.0\alpha.pdb
 C:\PROG\maze-runners\alpha\obj\Debug\net8.0\alpha.genruntimeconfig.cache
 C:\PROG\maze-runners\alpha\obj\Debug\net8.0\ref\alpha.dll
+C:\PROG\maze-runners\alpha\bin\Debug\net8.0\Spectre.Console.dll
+C:\PROG\maze-runners\alpha\bin\Debug\net8.0\Spectre.Console.Cli.dll
+C:\PROG\maze-runners\alpha\bin\Debug\net8.0\de\Spectre.Console.Cli.resources.dll
+C:\PROG\maze-runners\alpha\bin\Debug\net8.0\fr\Spectre.Console.Cli.resources.dll
+C:\PROG\maze-runners\alpha\bin\Debug\net8.0\sv\Spectre.Console.Cli.resources.dll
+C:\PROG\maze-runners\alpha\obj\Debug\net8.0\alpha.csproj.AssemblyReference.cache
+C:\PROG\maze-runners\alpha\obj\Debug\net8.0\alpha.csproj.CopyComplete
