@@ -1,7 +1,4 @@
-﻿
-using System.Security.Cryptography.X509Certificates;
-
-namespace alpha
+﻿namespace alpha
 {
     public class Board
     {
@@ -9,7 +6,8 @@ namespace alpha
         {
             string[,] board = BoardGeneration();
             Token token1 = new Token("8",0,1);
-            Token token2 = new Token("@",1,0);  
+            Token token2 = new Token("@",1,0);
+            int movecount = 0;
             BoardDisplay(token1,token2, board);
             
             while (true) //gameloop
@@ -17,7 +15,16 @@ namespace alpha
                 Console.Clear();
                 CanMove(board,token1.x,token1.y);
                 BoardDisplay(token1,token2, board);
-                (token1.x,token1.y)=MovePlayer(board,token1.x,token1.y);
+                int newx;
+                int newy;
+                (newx,newy)= MoveToken(board,token1.x,token1.y,movecount);
+                if(CanMove(board,newx,newy))
+                {
+                token1.x = newx;
+                token1.y = newy;
+                movecount++;
+                }
+                
             }
         }
 
@@ -41,43 +48,36 @@ namespace alpha
         }
 
 
-        public static (int x,int y) MovePlayer(string[,] board,int x,int y)
+        public static (int x,int y) MoveToken(string[,] board,int x,int y, int movecount)
         {
             var keyInfo = Console.ReadKey(true);
 
             if (keyInfo.Key == ConsoleKey.UpArrow)
             {   
-                if(CanMove(board,x-1,y))
-                {
+                
                 x--;
-                }
                 
             }
             else if (keyInfo.Key == ConsoleKey.DownArrow)
             {   
-                if(CanMove(board,x+1,y))
-                {
+                
                 x++;
-                }
                 
             }
             else if (keyInfo.Key == ConsoleKey.LeftArrow)
             {   
-                if(CanMove(board,x,y-1))
-                {
+                
                 y--;
-                }
                 
             }
             else if (keyInfo.Key == ConsoleKey.RightArrow)
             {   
-                if(CanMove(board,x,y+1))
-                {
+                
                 y++;
-                }
                 
             }
             return(x,y);
+            
         }
         
         public static bool CanMove(string[,] board,int x,int y)
