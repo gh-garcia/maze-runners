@@ -8,17 +8,16 @@ namespace alpha
         public static void Main()
         {
             string[,] board = BoardGeneration();
-            string player1 = "8";
-            int x = 0;
-            int y = 1;
-            BoardDisplay(player1, x, y, board);
+            Token token1 = new Token("8",0,1);
+            Token token2 = new Token("@",1,0);  
+            BoardDisplay(token1,token2, board);
             
             while (true) //gameloop
             {
                 Console.Clear();
-                CanMove(board,x,y);
-                BoardDisplay(player1, x, y, board);
-                (x,y)=MovePlayer(board,x,y);
+                CanMove(board,token1.x,token1.y);
+                BoardDisplay(token1,token2, board);
+                (token1.x,token1.y)=MovePlayer(board,token1.x,token1.y);
             }
         }
 
@@ -84,22 +83,23 @@ namespace alpha
         public static bool CanMove(string[,] board,int x,int y)
         {
             //*checks if the square i want to move the token to is taken by something (| x)
-            if(board[x,y]== "|" || board[x,y]== "x" || board[x,y]== "-")
+            if(board[x,y]== "|" || board[x,y]== "x" || board[x,y]== "-" || board[x,y]=="8" || board[x,y]=="@")
             {
                 return false;
             }
             return true;
         }
-        public static void BoardDisplay(string player1, int x, int y, string[,] board)
+        public static void BoardDisplay(Token token1,Token token2, string[,] board)
         {
             for (int i = 0; i < board.GetLength(0); i++)
             {
                 for (int j = 0; j < board.GetLength(1) ; j++)
                 {
                     
-                    if(i == x && j == y)
+                    if(i == token1.x && j == token1.y)
                     {
-                        System.Console.Write(player1);
+                        System.Console.Write(token1.symbol);
+                        
                     }
                     else
                     {
@@ -109,6 +109,20 @@ namespace alpha
                 }
                 System.Console.WriteLine();
             }
+        }
+    }
+    public class Token
+    {
+        public string symbol;
+        public int x;
+        public int y;
+
+        //albañil
+        public Token(string symbol, int x, int y)
+        {
+            this.symbol = symbol;
+            this.x = x;
+            this.y = y;
         }
     }
 }
