@@ -51,7 +51,7 @@
                 {
                     if(i == x && j == y)
                     {
-                        System.Console.Write(board[i,j] = player1);
+                        System.Console.Write(player1);
                     }
                     else
                     {
