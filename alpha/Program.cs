@@ -1,10 +1,28 @@
 ﻿namespace alpha
 {
-    public class Board
+    class Program
     {
         public static void Main()
         {
+            Board board = new Board();
+            board.StartGame();
+        }
+    }
+    public class Board
+    {
+        Token CurrentToken;
+        string[,] board;
+        bool IsPlayer2Turn = true;
+
+        public Board()
+        {
+            board = BoardGeneration();
+        }
+
+        public void StartGame()
+        {
             Token[] tokens = new Token [2];
+
             Token token1 = new Token("1",2,1,"VI",0,5);
             Token token2 = new Token("2",10,10,"Caitlyn",0,4);
             Token token3 = new Token("3",0,2,"Jayce",0,5);
@@ -14,11 +32,12 @@
             ShowWelcomeScreen();
             //debe haber una manera mejor de hacer esto
             TokenSelection(tokens,token1,token2,token3,token4,token5);
+            CurrentToken = tokens[0];
 
-            string[,] board = BoardGeneration();
+            board = BoardGeneration();
 
-            bool IsPlayer2Turn = false;
-            int dado = 2;
+            
+            int dado = 3;
 
             //Trap placement
             //Trap trapdamage = new Trap("*");
@@ -30,32 +49,8 @@
                 Console.Clear();
                 BoardDisplay(tokens, board);
 
-                int newx;
-                int newy;
-
-                (newx,newy)= MoveToken(board,token1.x,token1.y);
-                if(CanMove(board,newx,newy) && !IsPlayer2Turn)
-                {
-                token1.x = newx;
-                token1.y = newy;
-                token1.movecount++;
-                if(dado == token1.movecount){IsPlayer2Turn = true; token1.movecount = 0;}
                 
-                }
-
-                Console.Clear();
-                BoardDisplay(tokens, board);
-
-                (newx,newy)= MoveToken(board,token2.x,token2.y);
-                if(CanMove(board,newx,newy) && IsPlayer2Turn)
-                {
-                token2.x = newx;
-                token2.y = newy;
-                token2.movecount++;
-                if(dado== token2.movecount){IsPlayer2Turn = false; token2.movecount = 0;}
-                
-                }
-
+                TurnManagement(dado, tokens);    
                 
             }
         }
@@ -66,6 +61,35 @@
 
         var enterpressed = Console.ReadKey(true);
 
+        }
+
+        public void TurnManagement(int dado, Token[] tokens)
+        {
+          int newx;
+          int newy;
+          (newx,newy)= MoveToken(board,CurrentToken.x,CurrentToken.y);
+          if(CanMove(board,newx,newy))
+          {
+          CurrentToken.x = newx;
+          CurrentToken.y = newy;
+          CurrentToken.movecount++;
+
+          if(dado == CurrentToken.movecount){
+            CurrentToken.movecount = 0;
+
+          if(IsPlayer2Turn == false){
+            CurrentToken = tokens[0];
+            IsPlayer2Turn = true;
+            }
+
+          else{
+            CurrentToken = tokens[1];
+            IsPlayer2Turn = false;
+            }
+            }
+          
+          }
+            
         }
 
         public static void TokenSelection(Token[] tokens,Token token1,Token token2,Token token3,Token token4,Token token5)
@@ -253,7 +277,11 @@
             ";
 
             public static string CharacterSelectionArt = @"
-            Press 1. to select VI          Press 2. to select Caitlyn   Press 3. to select Jayce       Press 4. to select Viktor       Press 5. to select Jinx     
+            Press 1. to select VI          
+            Press 2. to select Caitlyn  
+            Press 3. to select Jayce       
+            Press 4. to select Viktor       
+            Press 5. to select Jinx     
             ";                    
     }
 
