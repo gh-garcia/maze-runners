@@ -4,21 +4,29 @@
     {
         public static void Main()
         {
+            ShowWelcomeScreen();
+            //TokenSelection();
+
             string[,] board = BoardGeneration();
             Token token1 = new Token("8",0,1,"Gimli",0,5);
             Token token2 = new Token("8",9,8,"Vi",0,5);
+            Token token3 = new Token("8",9,8,"Galadriel",0,5);
+            Token token4 = new Token("8",9,8,"Legolas",0,5);
+            Token token5 = new Token("8",9,8,"Boromir",0,5);
+
+            Token[] tokens = {token1,token2};
             bool IsPlayer2Turn = false;
             int dado = 1;
 
             //Trap placement
             Trap trapdamage = new Trap("*");
             
-            BoardDisplay(token1,token2, board);
+            BoardDisplay(tokens, board);
             
             while (true) //gameloop
             {
                 Console.Clear();
-                BoardDisplay(token1,token2, board);
+                BoardDisplay(tokens, board);
 
                 int newx;
                 int newy;
@@ -34,7 +42,7 @@
                 }
 
                 Console.Clear();
-                BoardDisplay(token1,token2, board);
+                BoardDisplay(tokens, board);
 
                 (newx,newy)= MoveToken(board,token2.x,token2.y);
                 if(CanMove(board,newx,newy) && IsPlayer2Turn)
@@ -49,21 +57,45 @@
                 
             }
         }
+        public static void ShowWelcomeScreen()
+        {
+
+        Console.WriteLine(asciiArt.WelcomeScreen);
+
+        var enterpressed = Console.ReadKey(true);
+
+        }
+
+        // public static void TokenSelection()
+        // {
+            //System.Console.WriteLine(asciiArt.CharacterSelectionArt);
+
+           // var teclamomentanea = Console.ReadKey(true);
+        // }
+        
 
         public static string[,] BoardGeneration()
         {
-            string[,] board = new string[10,10]
+            string[,] board = new string[17,27]
             {
-                {"+"," ","-","-","-","-","-","-","-","+"},
-                {"|"," ","|"," "," "," "," "," "," ","|"},
-                {"|"," ","|"," "," "," "," "," "," ","|"},
-                {"|"," ","|"," "," "," "," "," "," ","|"},
-                {"|"," ","|"," "," "," "," "," "," ","|"},
-                {"|"," ","|"," "," "," "," "," "," ","|"},
-                {"|"," "," "," "," "," "," "," "," ","|"},
-                {"|"," "," "," "," "," "," "," "," ","|"},
-                {"|"," "," "," "," "," "," "," "," ","|"},
-                {"+","-","-","-","-","-","-","-"," ","+"}
+                {"═","═","═","═","═","═","═","═","═","═","═","═","═","═","═","═","═","═","═","═","═","═","═","═","═","═","╗"},
+                {" "," ","║","","","","","","","","","","","","","","","","","","","","","","","","║"},
+                {"║"," ","║","","","","","","","","","","","","","","","","","","","","","","","","║"},
+                {"║"," ","║","","","","","","","","","","","","","","","","","","","","","","","","║"},
+                {"║"," ","║","","","","","","","","","","","","","","","","","","","","","","","","║"},
+                {"║"," ","║","","","","","","","","","","","","","","","","","","","","","","","","║"},
+                {"║"," ","║","","","","","","","","","","","","","","","","","","","","","","","","║"},
+                {"║"," ","║","","","","","","","","","","","","","","","","","","","","","","","","║"},
+                {"║"," ","║","","","","","","","","","","","","","","","","","","","","","","","","║"},
+                {"║"," ","║","","","","","","","","","","","","","","","","","","","","","","","","║"},
+                {"║"," ","║","","","","","","","","","","","","","","","","","","","","","","","","║"},
+                {"║"," ","║","","║","","","","","","","","","","","","","","","","","","","","","","║"},
+                {"║","","","","║","","","","","","","","","","","","","","","","","","","","","","║"},
+                {"║","","","","║","","","","","","","","","","","","","","","","","","","","","","║"},
+                {"║","","","","","","","","","","","","","","","","","","","","","","","","","","║"},
+                {"║","","","","","","","","","","","","","","","","","","","","","","","","",""," "},
+                {"╚","═","═","═","═","═","═","═","═","═","═","═","═","═","═","═","═","═","═","═","═","═","═","═","═","═","═"}
+                
             };
 
             return board;
@@ -76,27 +108,19 @@
 
             if (keyInfo.Key == ConsoleKey.UpArrow)
             {   
-                
                 x--;
-                
             }
             else if (keyInfo.Key == ConsoleKey.DownArrow)
             {   
-                
                 x++;
-                
             }
             else if (keyInfo.Key == ConsoleKey.LeftArrow)
             {   
-                
-                y--;
-                
+                y--;  
             }
             else if (keyInfo.Key == ConsoleKey.RightArrow)
             {   
-                
-                y++;
-                
+                y++; 
             }
             return(x,y);
             
@@ -111,30 +135,24 @@
             }
             return true;
         }
-        public static void BoardDisplay(Token token1,Token token2, string[,] board)
+        public static void BoardDisplay(Token[] tokens, string[,] board)
         {
             for (int i = 0; i < board.GetLength(0); i++)
             {
                 for (int j = 0; j < board.GetLength(1) ; j++)
                 {
-                    
-                    if(i == token1.x && j == token1.y)
+                    bool CharacterWasPrinted = false;
+                    for (int m = 0; m < 2; m++)
                     {
-                        System.Console.Write(token1.symbol);
-                        
+                        if(i == tokens[m].x && j == tokens[m].y )
+                        {
+                        System.Console.Write(tokens[m].symbol);
+                        CharacterWasPrinted = true;
+                        }
                     }
-                    //*si pongo esto el laberinto es mas lindo no se por que
-                    // else
-                    // {
-                    // System.Console.Write(board[i,j]);
-                    // }
-                    else if(i == token2.x && j == token2.y)
+                    if(!CharacterWasPrinted)
                     {
-                        System.Console.Write(token2.symbol);
-                    }
-                    else
-                    {
-                    System.Console.Write(board[i,j]);
+                        System.Console.Write(board[i,j]);
                     }
                     
                 }
@@ -175,5 +193,29 @@
             this.symbol = symbol;
         }
     }
+
+
+
+    public static class asciiArt
+    {// es static para que cuando vaya para alla arriba no tener que hacer NEW ASCIIART etc... funciona sin tener que crear instancias, un almacen de cosas
+            public static string WelcomeScreen = @"
+            ███╗   ███╗ █████╗ ███████╗███████╗                          
+            ████╗ ████║██╔══██╗╚══███╔╝██╔════╝                          
+            ██╔████╔██║███████║  ███╔╝ █████╗                            
+            ██║╚██╔╝██║██╔══██║ ███╔╝  ██╔══╝                            
+            ██║ ╚═╝ ██║██║  ██║███████╗███████╗                          
+            ╚═╝     ╚═╝╚═╝  ╚═╝╚══════╝╚══════╝                          
+            ██████╗ ██╗   ██╗███╗   ██╗███╗   ██╗███████╗██████╗ ███████╗
+            ██╔══██╗██║   ██║████╗  ██║████╗  ██║██╔════╝██╔══██╗██╔════╝
+            ██████╔╝██║   ██║██╔██╗ ██║██╔██╗ ██║█████╗  ██████╔╝███████╗
+            ██╔══██╗██║   ██║██║╚██╗██║██║╚██╗██║██╔══╝  ██╔══██╗╚════██║
+            ██║  ██║╚██████╔╝██║ ╚████║██║ ╚████║███████╗██║  ██║███████║
+            ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═══╝╚═╝  ╚═══╝╚══════╝╚═╝  ╚═╝╚══════╝
+            ---------------------------ARCANE VERSION-------------------------------
+
+            Press any key to continue...
+            ";                    
+    }
+
 }
 
