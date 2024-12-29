@@ -60,6 +60,7 @@
         Console.WriteLine(asciiArt.WelcomeScreen);
 
         var enterpressed = Console.ReadKey(true);
+        Console.Clear();
 
         }
 
@@ -87,6 +88,7 @@
             IsPlayer2Turn = false;
             }
             }
+
           
           }
             
@@ -271,18 +273,15 @@
             ██╔══██╗██║   ██║██║╚██╗██║██║╚██╗██║██╔══╝  ██╔══██╗╚════██║
             ██║  ██║╚██████╔╝██║ ╚████║██║ ╚████║███████╗██║  ██║███████║
             ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═══╝╚═╝  ╚═══╝╚══════╝╚═╝  ╚═╝╚══════╝
-            ---------------------------ARCANE VERSION-------------------------------
+            ---------------------------ARCANE EDITION-------------------------------
 
             Press any key to continue...
             ";
 
-            public static string CharacterSelectionArt = @"
-            Press 1. to select VI          
-            Press 2. to select Caitlyn  
-            Press 3. to select Jayce       
-            Press 4. to select Viktor       
-            Press 5. to select Jinx     
-            ";                    
+            public static string CharacterSelectionArt = File.ReadAllText("CharacterArt.txt");
+            
+            
+            
     }
 
 }
