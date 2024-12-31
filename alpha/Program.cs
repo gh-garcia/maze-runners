@@ -1,4 +1,5 @@
-﻿namespace alpha
+﻿
+namespace alpha
 {
     class Program
     {
@@ -13,6 +14,8 @@
         Token CurrentToken;
         string[,] board;
         bool IsPlayer2Turn = true;
+        private Random random = new Random();
+        int dado = 1;
 
         public Board()
         {
@@ -36,21 +39,17 @@
 
             board = BoardGeneration();
 
-            
-            int dado = 3;
-
             //Trap placement
             //Trap trapdamage = new Trap("*");
             
             BoardDisplay(tokens, board);
-            
             while (true) //gameloop
             {
                 Console.Clear();
                 BoardDisplay(tokens, board);
 
                 
-                TurnManagement(dado, tokens);    
+                TurnManagement(dado, tokens, random);    
                 
             }
         }
@@ -64,16 +63,19 @@
 
         }
 
-        public void TurnManagement(int dado, Token[] tokens)
+        public void TurnManagement(int dado, Token[] tokens, Random random)
         {
           int newx;
           int newy;
+          DiceThrow(dado,random);
+          
           (newx,newy)= MoveToken(board,CurrentToken.x,CurrentToken.y);
           if(CanMove(board,newx,newy))
           {
           CurrentToken.x = newx;
           CurrentToken.y = newy;
           CurrentToken.movecount++;
+          
 
           if(dado == CurrentToken.movecount){
             CurrentToken.movecount = 0;
@@ -93,6 +95,31 @@
           }
             
         }
+
+        public int DiceThrow(int dado, Random random)
+        {
+            System.Console.WriteLine($"It's {CurrentToken.name}'s turn");
+            if(dado == 0)
+            {
+                System.Console.WriteLine("Press R to roll the dice");
+            
+                var input = Console.ReadKey(true);
+                if (input.Key == ConsoleKey.R)
+                {   
+                    dado = random.Next(1,7);
+                    System.Console.WriteLine($"Player has {dado} remaining moves");
+                }
+                else 
+                {
+                    System.Console.WriteLine($" {dado} Wrong key, please press R to roll...");
+            
+                }
+            }
+            
+            return dado;
+            }
+
+        
 
         public static void TokenSelection(Token[] tokens,Token token1,Token token2,Token token3,Token token4,Token token5)
         {
@@ -260,6 +287,7 @@
 
     public static class asciiArt
     {// es static para que cuando vaya para alla arriba no tener que hacer NEW ASCIIART etc... funciona sin tener que crear instancias, un almacen de cosas
+    //despues descubri que lo puedo poner en txt pero es que maze runners aqui me gusta XD
             public static string WelcomeScreen = @"
             ███╗   ███╗ █████╗ ███████╗███████╗                          
             ████╗ ████║██╔══██╗╚══███╔╝██╔════╝                          
