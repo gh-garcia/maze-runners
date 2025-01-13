@@ -15,7 +15,7 @@ namespace alpha
         string[,] board;
         bool IsPlayer2Turn = true;
         private Random random = new Random();
-        int dado = 1;
+        //int dado = 1;
 
         public Board()
         {
@@ -49,7 +49,7 @@ namespace alpha
                 BoardDisplay(tokens, board);
 
                 
-                TurnManagement(dado, tokens, random);    
+                TurnManagement(tokens,random);    
                 
             }
         }
@@ -63,43 +63,55 @@ namespace alpha
 
         }
 
-        public void TurnManagement(int dado, Token[] tokens, Random random)
+        public void TurnManagement(Token[] tokens, Random random)
         {
-          int newx;
-          int newy;
-          DiceThrow(dado,random);
-          
-          (newx,newy)= MoveToken(board,CurrentToken.x,CurrentToken.y);
-          if(CanMove(board,newx,newy))
-          {
-          CurrentToken.x = newx;
-          CurrentToken.y = newy;
-          CurrentToken.movecount++;
-          
+            int dadoX  = DiceThrow(0,random);
 
-          if(dado == CurrentToken.movecount){
-            CurrentToken.movecount = 0;
+            while (dadoX > 0)
+            {
+                int newx;
+                int newy;
 
-          if(IsPlayer2Turn == false){
-            CurrentToken = tokens[0];
-            IsPlayer2Turn = true;
+                (newx,newy)= MoveToken(board,CurrentToken.x,CurrentToken.y);
+
+                if(CanMove(board,newx,newy))
+                {
+                    CurrentToken.x = newx;
+                    CurrentToken.y = newy;
+                    CurrentToken.movecount++;
+                    dadoX--;
+
+                    System.Console.WriteLine($"{dadoX} moves left");
+                }
             }
 
-          else{
-            CurrentToken = tokens[1];
-            IsPlayer2Turn = false;
-            }
-            }
+            if(dadoX == 0)
+            {
+                CurrentToken.movecount = 0;
 
-          
+                if(IsPlayer2Turn == false)
+                {
+                    CurrentToken = tokens[0];
+                    IsPlayer2Turn = true;
+                }
+
+                else
+                {
+                    CurrentToken = tokens[1];
+                    IsPlayer2Turn = false;
+                }
           }
+
+          
+          
             
         }
 
         public int DiceThrow(int dado, Random random)
         {
             System.Console.WriteLine($"It's {CurrentToken.name}'s turn");
-            if(dado == 0)
+
+            while(dado == 0)
             {
                 System.Console.WriteLine("Press R to roll the dice");
             
