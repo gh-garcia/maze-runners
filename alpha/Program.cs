@@ -1,4 +1,6 @@
 ﻿
+using System.Net.Mail;
+
 namespace alpha
 {
     class Program
@@ -17,10 +19,10 @@ namespace alpha
         private Random random = new Random();
         //int dado = 1;
 
-        public Board()
-        {
-            board = BoardGeneration();
-        }
+        // public Board()
+        // {
+        //     board = BoardGeneration();
+        // }
 
         public void StartGame()
         {
@@ -177,6 +179,10 @@ namespace alpha
 
         public static string[,] BoardGeneration()
         {
+            //int height = 17; int width = 27;
+            // string[,] board = new string[height,width];
+            // DFS(board,1,1);
+
             string[,] board = new string[17,27]
             {
                 {"═","═","═","═","═","═","═","═","═","═","═","═","═","═","═","═","═","═","═","═","═","═","═","═","═","═","╗"},
@@ -199,8 +205,83 @@ namespace alpha
                 
             };
 
+
             return board;
         }
+
+        // public static void DFS(string[,] board, int EntranceX, int EntranceY)
+        // {
+        //     //ponerlo todo bloqueado
+        //     for (int i = 0; i < board.GetLength(0); i++)
+        //     {
+        //         for (int j = 0; j < board.GetLength(1); j++)
+        //         {
+        //             board[i,j] = "█";
+        //         }
+        //     }
+
+        //     Stack<(int,int)> stack = new Stack<(int, int)>();
+        //     stack.Push((EntranceX,EntranceY));
+        //     board[EntranceX,EntranceY] = " ";  //visitadas
+        //     Random random = new Random();
+
+        //     while (stack.Count > 0)
+        //     {
+        //         (int x, int y) = stack.Peek();
+        //         List<(int, int)> neighbors = UnvisitedNeigh(board,x,y);
+
+        //         if (neighbors.Count > 0)
+        //         {
+        //             (int nx, int ny) = neighbors[random.Next(neighbors.Count)];
+        //             RemWall(board, x, y, nx, ny);
+        //             board[nx, ny] = " "; // visitada
+        //             stack.Push((nx, ny));
+        //         }
+        //         else
+        //         {
+        //             stack.Pop();
+        //         }
+        //     }
+        // }
+
+        // static List<(int,int)> UnvisitedNeigh(string[,] board, int x, int y)
+        // {
+        //     List<(int, int)> neighbors = new List<(int, int)>();
+
+        //     if(x > 1 && board[x - 2, y] == "█")
+        //     {
+        //         neighbors.Add((x - 2, y)); 
+        //     }
+        //     if (x < board.GetLength(0) - 2 && board[x + 2, y] == "█")
+        //     {
+        //         neighbors.Add((x + 2, y));  
+        //     } 
+        //     if (y > 1 && board[x, y - 2] == "█")
+        //     {
+        //         neighbors.Add((x, y - 2));
+        //     } ; 
+        //     if (y < board.GetLength(1) - 2 && board[x, y + 2] == "█")
+        //     {
+        //         neighbors.Add((x, y + 2));
+        //     }
+        //     return neighbors;
+        // }
+
+        // static void RemWall(string[,] board, int x1, int x2, int y1, int y2)
+        // {
+        //     if (x1 < 0 || x1 >= board.GetLength(0) || y1 < 0 || y1 >= board.GetLength(1) || x2 < 0 || x2 >= board.GetLength(0) || y2 < 0 || y2 >= board.GetLength(1))
+        //     {
+        //         return;  //cosa fuera de limites
+        //     }
+        //     int wallX = (x1 + x2) / 2;
+        //     int wallY = (y1 + y2) / 2;
+
+        //     if (wallX < 0 || wallX >= board.GetLength(0) || wallY < 0 || wallY >= board.GetLength(1))
+        //     {
+        //         return; 
+        //     }
+        //     board[wallX, wallY] = " "; 
+        // }
 
 
         public static (int x,int y) MoveToken(string[,] board,int x,int y)
