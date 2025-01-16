@@ -1,5 +1,5 @@
-﻿
-using System.Net.Mail;
+﻿using System.Runtime.CompilerServices;
+using System.Security;
 
 namespace alpha
 {
@@ -17,6 +17,8 @@ namespace alpha
         string[,] board;
         bool IsPlayer2Turn = true;
         private Random random = new Random();
+        List<Trap> traps = new List<Trap>();
+        int trapcount = 5;
         //int dado = 1;
 
         // public Board()
@@ -28,24 +30,23 @@ namespace alpha
         {
             Token[] tokens = new Token [2];
 
-            Token token1 = new Token("1",2,1,"VI",0,5);
-            Token token2 = new Token("2",10,10,"Caitlyn",0,4);
-            Token token3 = new Token("3",0,2,"Jayce",0,5);
-            Token token4 = new Token("4",10,10,"Viktor",0,3);
-            Token token5 = new Token("5",0,2,"Jinx",0,4);
+            Token token1 = new Token("ت",2,1,"VI",0,5);
+            Token token2 = new Token("ة",10,10,"Caitlyn",0,4);
+            Token token3 = new Token("ث",0,2,"Jayce",0,5);
+            Token token4 = new Token("Ж",10,10,"Viktor",0,3);
+            Token token5 = new Token("ώ",0,2,"Jinx",0,4);
+
 
             ShowWelcomeScreen();
-            //debe haber una manera mejor de hacer esto
+            //*debe haber una manera mejor de hacer esto
             TokenSelection(tokens,token1,token2,token3,token4,token5);
             CurrentToken = tokens[0];
 
             board = BoardGeneration();
-
-            //Trap placement
-            //Trap trapdamage = new Trap("*");
+            PlaceTraps(trapcount, traps);
             
             BoardDisplay(tokens, board);
-            while (true) //gameloop
+            while (true) //*gameloop
             {
                 Console.Clear();
                 BoardDisplay(tokens, board);
@@ -82,6 +83,7 @@ namespace alpha
                     CurrentToken.y = newy;
                     CurrentToken.movecount++;
                     dadoX--;
+                    TriggerTrapPosition(newx,newy,CurrentToken);
 
                     System.Console.WriteLine($"{dadoX} moves left");
                 }
@@ -126,10 +128,8 @@ namespace alpha
                 else 
                 {
                     System.Console.WriteLine($" {dado} Wrong key, please press R to roll...");
-            
                 }
             }
-            
             return dado;
             }
 
@@ -310,7 +310,7 @@ namespace alpha
         
         public static bool CanMove(string[,] board,int x,int y)
         {
-            //*checks if the square i want to move the token to is taken by something (| x)
+            //*checks if the square i want to move the token to is taken by something
             if(board[x,y]== "║" || board[x,y]== "x" || board[x,y]== "═" || board[x,y]=="8")
             {
                 return false;
@@ -341,6 +341,49 @@ namespace alpha
                 System.Console.WriteLine();
             }
         }
+
+        public void PlaceTraps(int trapcount, List<Trap> traps)
+        {
+            Random rand = new Random();
+
+            for (int i = 0; i < trapcount; i++)
+            {
+                int x = random.Next(1, board.GetLength(0)-1);
+                int y = random.Next(1, board.GetLength(1)-1);
+
+                if(board[x,y] == " ")
+                {
+                    string TrapType = GetRandomTrap();
+                    Trap newTrap = new Trap("X", TrapType, x, y);
+
+                    traps.Add(newTrap);
+                    board[x, y] = newTrap.symbol;
+
+                }
+                else
+                {
+                    i--;
+                }
+            }
+        }
+
+        public void TriggerTrapPosition(int x, int y, Token CurrentToken)
+        {
+            foreach (var trap in traps)
+            {
+                if (trap.X == x && trap.Y == y)
+                {
+                    trap.Trigger(CurrentToken);
+                }
+            }
+        }
+
+        public string GetRandomTrap()
+        {
+            string[] TrapTypes = {"dart", "sand", "fog"};
+            int index = random.Next(0, TrapTypes.Length);
+            return TrapTypes[index];
+        }
     }
     public class Token
     {
@@ -366,13 +409,54 @@ namespace alpha
     public class Trap
     {
         public string symbol;
-
+        public string type;
+        public int X;
+        public int Y;
 
 
         //constructor de Trap
-        public Trap(string symbol)
+        public Trap(string symbol, string type, int X, int Y)
         {
-            this.symbol = symbol;
+            this.type = type;
+            this.X = X;
+            this.Y = Y;
+
+            if (type == "dart")
+            {
+                this.symbol = "D";
+            }
+            else if (type == "sand")
+            {
+                this.symbol = "S";
+            }
+            else if(type == "fog")
+            {
+                this.symbol = "F";
+            }
+            else
+            {
+                this.symbol = "X";
+            }
+        }
+
+        public void Trigger(Token CurrentToken)
+        {
+            if (this.type == "dart")
+            {
+                System.Console.WriteLine("You've stepped on a plate and a dart shot out a wall. Your HP is reduced by 1");
+                CurrentToken.health -= 1;
+            }
+            else if (this.type == "sand")
+            {
+                System.Console.WriteLine("You were swallowed by moving sand, the rest of your turn is gone");
+                CurrentToken.movecount = 0;
+            }
+            else if (this.type == "fog")
+            {
+                System.Console.WriteLine("A thick fog surrounds you, you can't see");
+                //!AQUI IRIA LO QUE HAY QUE HACER SI SUPIERA COMO HACERLO POR AHORA ES:
+                //* TriggerFogTrap();
+            }
         }
     }
 
