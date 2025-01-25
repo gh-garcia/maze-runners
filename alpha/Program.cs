@@ -1,7 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-using System.Security;
-
-namespace alpha
+﻿namespace alpha
 {
     class Program
     {
@@ -19,6 +16,12 @@ namespace alpha
         private Random random = new Random();
         List<Trap> traps = new List<Trap>();
         int trapcount = 5;
+
+        //array de direcciones
+        int[] DX = {0,-1,0,1};
+        int[] DY = {1,0,-1,0};
+
+
         //int dado = 1;
 
         // public Board()
@@ -177,7 +180,7 @@ namespace alpha
         }
         
 
-        public static string[,] BoardGeneration()
+        public string[,] BoardGeneration()
         {
             int height = 17; int width = 27;
             string[,] board = new string[height,width];
@@ -209,7 +212,7 @@ namespace alpha
             return board;
         }
 
-            public static void DFS(string[,] board, int EntranceX, int EntranceY)
+            public void DFS(string[,] board, int EntranceX, int EntranceY)
             {
                 //ponerlo todo bloqueado
                 for (int i = 0; i < board.GetLength(0); i++)
@@ -241,27 +244,30 @@ namespace alpha
                 }
             }
 
-            static List<(int,int)> UnvisitedNeigh(string[,] board, int x, int y)
+            List<(int,int)> UnvisitedNeigh(string[,] board, int x, int y)
             {
                 List<(int, int)> neighbors = new List<(int, int)>();
 
-                if(x-1 > 1 && board[x - 1, y] == "█")
+                    int m = board.GetLength(0);
+                    int n = board.GetLength(1);
+
+                for (int d = 0; d < this.DX.GetLength(0); d++)
                 {
-                    neighbors.Add((x - 1, y)); 
-                }
-                if (x < board.GetLength(0) - 2 && board[x + 1, y] == "█")
-                {
-                    neighbors.Add((x + 1, y));  
-                } 
-                if (y > 1 && board[x, y - 1] == "█")
-                {
-                    neighbors.Add((x, y - 1));
-                } ; 
-                if (y < board.GetLength(1) - 2 && board[x, y + 1] == "█")
-                {
-                    neighbors.Add((x, y + 1));
+
+                    int newx = x + this.DX[d];
+                    int newy = y + this.DY[d];
+
+                    if (ValidPosition(m,n,newx,newy) && board[newx,newy] == "█")
+                    {
+                        neighbors.Add((newx,newy));
+                    }
                 }
                 return neighbors;
+            }
+
+            private static bool ValidPosition(int m, int n, int x, int y)
+            {
+                return x >= 0 && x < m && y >= 0 && y < n;
             }
 
             static void RemWall(string[,] board, int x1, int x2, int y1, int y2)
