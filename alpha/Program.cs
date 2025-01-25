@@ -21,14 +21,6 @@
         int[] DX = {0,-1,0,1};
         int[] DY = {1,0,-1,0};
 
-
-        //int dado = 1;
-
-        // public Board()
-        // {
-        //     board = BoardGeneration();
-        // }
-
         public void StartGame()
         {
             Token[] tokens = new Token [2];
@@ -184,7 +176,7 @@
         {
             int height = 17; int width = 27;
             string[,] board = new string[height,width];
-            DFS(board,0,0);
+            DFS(board,1,0);
 
             // string[,] board = new string[17,27]
             // {
@@ -232,11 +224,12 @@
                 {
                     (int x, int y) = stack.Pop();
                     List<(int, int)> neighbors = UnvisitedNeigh(board,x,y);
+                    System.Console.WriteLine(neighbors.Count);
 
                     if (neighbors.Count > 0)
                     {
                         (int nx, int ny) = neighbors[random.Next(neighbors.Count)];
-                        //RemWall(board, x, y, nx, ny);
+                        RemWall(board, x, nx, y, ny);
                         board[nx, ny] = " "; // visitada
                         stack.Push((nx, ny));
                     }
@@ -250,12 +243,13 @@
 
                     int m = board.GetLength(0);
                     int n = board.GetLength(1);
+                    int k = 2;
 
                 for (int d = 0; d < this.DX.GetLength(0); d++)
                 {
 
-                    int newx = x + this.DX[d];
-                    int newy = y + this.DY[d];
+                    int newx = x + this.DX[d]*k;
+                    int newy = y + this.DY[d]*k;
 
                     if (ValidPosition(m,n,newx,newy) && board[newx,newy] == "█")
                     {
@@ -267,22 +261,22 @@
 
             private static bool ValidPosition(int m, int n, int x, int y)
             {
-                return x >= 0 && x < m && y >= 0 && y < n;
+                return x >= 1 && x < m-1&& y >= 1 && y < n-1;   
             }
 
             static void RemWall(string[,] board, int x1, int x2, int y1, int y2)
             {
-                if (x1 < 0 || x1 >= board.GetLength(0) || y1 < 0 || y1 >= board.GetLength(1) || x2 < 0 || x2 >= board.GetLength(0) || y2 < 0 || y2 >= board.GetLength(1))
-                {
-                    return;  //cosa fuera de limites
-                }
+                // if (x1 < 0 || x1 >= board.GetLength(0) || y1 < 0 || y1 >= board.GetLength(1) || x2 < 0 || x2 >= board.GetLength(0) || y2 < 0 || y2 >= board.GetLength(1))
+                // {
+                //     return;  //cosa fuera de limites
+                // }
                 int wallX = (x1 + x2) / 2;
                 int wallY = (y1 + y2) / 2;
 
-                if (wallX < 0 || wallX >= board.GetLength(0) || wallY < 0 || wallY >= board.GetLength(1))
-                {
-                    return; 
-                }
+                // if (wallX < 0 || wallX >= board.GetLength(0) || wallY < 0 || wallY >= board.GetLength(1))
+                // {
+                //     return; 
+                // }
                 board[wallX, wallY] = " "; 
             }
 
