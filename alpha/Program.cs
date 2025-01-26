@@ -38,7 +38,7 @@
             ShowWelcomeScreen();
             //*debe haber una manera mejor de hacer esto
             TokenSelection(tokens,token1,token2,token3,token4,token5);
-            CurrentToken = tokens[1];
+            CurrentToken = tokens[0];
 
             board = BoardGeneration();
             PlaceTraps(trapcount, traps);
@@ -105,7 +105,7 @@
                 }
             }
 
-            if(dado == 0)
+            else
             {
 
                 CurrentToken.movecount = 0;
@@ -131,23 +131,19 @@
 
         public int DiceThrow(int dado, Random random)
         {
-            
 
+            System.Console.WriteLine("Press R to roll the dice");
+            var input = Console.ReadKey(true);
 
-                System.Console.WriteLine("Press R to roll the dice");
-            
-                var input = Console.ReadKey(true);
-                if (input.Key == ConsoleKey.R)
-                {   
-                    dado = random.Next(1,7);
-                }
-                else 
-                {
-                    System.Console.WriteLine($" {dado} Wrong key, please press R to roll...");
-                }
+            while(input.Key != ConsoleKey.R)
+            {   
+                input = Console.ReadKey(true);
+                System.Console.WriteLine("Wrong key, please press R to roll...");
+            }
+                
+            dado = random.Next(1,7);
             return dado;
             }
-
         
 
         public static void TokenSelection(Token[] tokens,Token token1,Token token2,Token token3,Token token4,Token token5)
@@ -320,7 +316,7 @@
             public static bool CanMove(string[,] board,int x,int y)
             {
                 //*checks if the square i want to move the token to is taken by something
-                if(board[x,y]== "║" || board[x,y]== "x" || board[x,y]== "═" || board[x,y]=="8")
+                if(board[x,y]== "█")
                 {
                     return false;
                 }
@@ -489,22 +485,22 @@
     {// es static para que cuando vaya para alla arriba no tener que hacer NEW ASCIIART etc... funciona sin tener que crear instancias, un almacen de cosas
     //despues descubri que lo puedo poner en txt pero es que maze runners aqui me gusta XD
             public static string WelcomeScreen = @"
-                                                            ███╗   ███╗ █████╗ ███████╗███████╗                          
-                                                            ████╗ ████║██╔══██╗╚══███╔╝██╔════╝                          
-                                                            ██╔████╔██║███████║  ███╔╝ █████╗                            
-                                                            ██║╚██╔╝██║██╔══██║ ███╔╝  ██╔══╝                            
-                                                            ██║ ╚═╝ ██║██║  ██║███████╗███████╗                          
-                                                            ╚═╝     ╚═╝╚═╝  ╚═╝╚══════╝╚══════╝                          
-                                                            ██████╗ ██╗   ██╗███╗   ██╗███╗   ██╗███████╗██████╗ ███████╗
-                                                            ██╔══██╗██║   ██║████╗  ██║████╗  ██║██╔════╝██╔══██╗██╔════╝
-                                                            ██████╔╝██║   ██║██╔██╗ ██║██╔██╗ ██║█████╗  ██████╔╝███████╗
-                                                            ██╔══██╗██║   ██║██║╚██╗██║██║╚██╗██║██╔══╝  ██╔══██╗╚════██║
-                                                            ██║  ██║╚██████╔╝██║ ╚████║██║ ╚████║███████╗██║  ██║███████║
-                                                            ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═══╝╚═╝  ╚═══╝╚══════╝╚═╝  ╚═╝╚══════╝
-                                                            ---------------------------ARCANE EDITION-------------------------------
+            ███╗   ███╗ █████╗ ███████╗███████╗                          
+            ████╗ ████║██╔══██╗╚══███╔╝██╔════╝                          
+            ██╔████╔██║███████║  ███╔╝ █████╗                            
+            ██║╚██╔╝██║██╔══██║ ███╔╝  ██╔══╝                            
+            ██║ ╚═╝ ██║██║  ██║███████╗███████╗                          
+            ╚═╝     ╚═╝╚═╝  ╚═╝╚══════╝╚══════╝                          
+            ██████╗ ██╗   ██╗███╗   ██╗███╗   ██╗███████╗██████╗ ███████╗
+            ██╔══██╗██║   ██║████╗  ██║████╗  ██║██╔════╝██╔══██╗██╔════╝
+            ██████╔╝██║   ██║██╔██╗ ██║██╔██╗ ██║█████╗  ██████╔╝███████╗
+            ██╔══██╗██║   ██║██║╚██╗██║██║╚██╗██║██╔══╝  ██╔══██╗╚════██║
+            ██║  ██║╚██████╔╝██║ ╚████║██║ ╚████║███████╗██║  ██║███████║
+            ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═══╝╚═╝  ╚═══╝╚══════╝╚═╝  ╚═╝╚══════╝
+            ---------------------------ARCANE EDITION-------------------------------
 
-                                                            Press any key to continue...
-                                                            ";
+            Press any key to continue...
+            ";
 
             public static string CharacterSelectionArt = File.ReadAllText("CharacterArt.txt");
             
