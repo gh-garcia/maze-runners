@@ -1,7 +1,4 @@
-﻿using System.ComponentModel.Design;
-using System.Security.Cryptography.X509Certificates;
-
-namespace alpha
+﻿namespace alpha
 {
     class Program
     {
@@ -15,10 +12,13 @@ namespace alpha
     {
         Token CurrentToken;
         string[,] board;
+        int height = 25;
+        int width = 50;
+        int dado = 0;
         bool IsPlayer2Turn = true;
         private Random random = new Random();
         List<Trap> traps = new List<Trap>();
-        int trapcount = 5;
+        int trapcount = 8;
 
         //array de direcciones
         int[] DX = {0,-1,0,1};
@@ -28,17 +28,17 @@ namespace alpha
         {
             Token[] tokens = new Token [2];
 
-            Token token1 = new Token("ت",2,1,"VI",0,5);
-            Token token2 = new Token("ة",10,10,"Caitlyn",0,4);
-            Token token3 = new Token("ث",0,2,"Jayce",0,5);
-            Token token4 = new Token("Ж",10,10,"Viktor",0,3);
-            Token token5 = new Token("ώ",0,2,"Jinx",0,4);
+            Token token1 = new Token("V",(height/2),(width/2),"VI",0,5);
+            Token token2 = new Token("X",(height/2)-1,(width/2),"Caitlyn",0,4);
+            Token token3 = new Token("ث",(height/2)-2,(width/2),"Jayce",0,5);
+            Token token4 = new Token("Ж",(height/2)-3,(width/2),"Viktor",0,3);
+            Token token5 = new Token("ώ",(height/2)+1,(width/2),"Jinx",0,4);
 
 
             ShowWelcomeScreen();
             //*debe haber una manera mejor de hacer esto
             TokenSelection(tokens,token1,token2,token3,token4,token5);
-            CurrentToken = tokens[0];
+            CurrentToken = tokens[1];
 
             board = BoardGeneration();
             PlaceTraps(trapcount, traps);
@@ -48,7 +48,7 @@ namespace alpha
             {
                 Console.Clear();
                 BoardDisplay(tokens, board);
-
+                System.Console.WriteLine(ShowUI());
                 
                 TurnManagement(tokens,random);    
                 
@@ -64,11 +64,29 @@ namespace alpha
 
         }
 
+        public string ShowUI()
+        {
+            string UI = $@"
++------------------------------------------------+
+            Player Turn:{CurrentToken.name}         
++------------------------------------------------+
+|                                                |
+|  Moves left:{dado}                                  |
+|                                                |
+|  > Health:{CurrentToken.health}                                    |
+|  > Habilities:                                 |
+|                                                |
+|                                                |
+|  :)                                            |
+|                                                |
++------------------------------------------------+
+            ";
+            return UI;
+        }
+
         public void TurnManagement(Token[] tokens, Random random)
         {
-            int dadoX  = DiceThrow(0,random);
-
-            while (dadoX > 0)
+            if(dado > 0)
             {
                 int newx;
                 int newy;
@@ -80,15 +98,16 @@ namespace alpha
                     CurrentToken.x = newx;
                     CurrentToken.y = newy;
                     CurrentToken.movecount++;
-                    dadoX--;
+                    dado--;
                     TriggerTrapPosition(newx,newy,CurrentToken);
 
-                    System.Console.WriteLine($"{dadoX} moves left");
+                    
                 }
             }
 
-            if(dadoX == 0)
+            if(dado == 0)
             {
+
                 CurrentToken.movecount = 0;
 
                 if(IsPlayer2Turn == false)
@@ -102,6 +121,7 @@ namespace alpha
                     CurrentToken = tokens[1];
                     IsPlayer2Turn = false;
                 }
+                dado = DiceThrow(0,random);
           }
 
           
@@ -111,23 +131,20 @@ namespace alpha
 
         public int DiceThrow(int dado, Random random)
         {
-            System.Console.WriteLine($"It's {CurrentToken.name}'s turn");
+            
 
-            while(dado == 0)
-            {
+
                 System.Console.WriteLine("Press R to roll the dice");
             
                 var input = Console.ReadKey(true);
                 if (input.Key == ConsoleKey.R)
                 {   
                     dado = random.Next(1,7);
-                    System.Console.WriteLine($"Player has {dado} remaining moves");
                 }
                 else 
                 {
                     System.Console.WriteLine($" {dado} Wrong key, please press R to roll...");
                 }
-            }
             return dado;
             }
 
@@ -177,7 +194,8 @@ namespace alpha
 
         public string[,] BoardGeneration()
         {
-            int height = 25; int width = 50;
+            
+
             string[,] board = new string[height,width];
             DFS(board,1,0,height,width);
 
@@ -471,22 +489,22 @@ namespace alpha
     {// es static para que cuando vaya para alla arriba no tener que hacer NEW ASCIIART etc... funciona sin tener que crear instancias, un almacen de cosas
     //despues descubri que lo puedo poner en txt pero es que maze runners aqui me gusta XD
             public static string WelcomeScreen = @"
-            ███╗   ███╗ █████╗ ███████╗███████╗                          
-            ████╗ ████║██╔══██╗╚══███╔╝██╔════╝                          
-            ██╔████╔██║███████║  ███╔╝ █████╗                            
-            ██║╚██╔╝██║██╔══██║ ███╔╝  ██╔══╝                            
-            ██║ ╚═╝ ██║██║  ██║███████╗███████╗                          
-            ╚═╝     ╚═╝╚═╝  ╚═╝╚══════╝╚══════╝                          
-            ██████╗ ██╗   ██╗███╗   ██╗███╗   ██╗███████╗██████╗ ███████╗
-            ██╔══██╗██║   ██║████╗  ██║████╗  ██║██╔════╝██╔══██╗██╔════╝
-            ██████╔╝██║   ██║██╔██╗ ██║██╔██╗ ██║█████╗  ██████╔╝███████╗
-            ██╔══██╗██║   ██║██║╚██╗██║██║╚██╗██║██╔══╝  ██╔══██╗╚════██║
-            ██║  ██║╚██████╔╝██║ ╚████║██║ ╚████║███████╗██║  ██║███████║
-            ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═══╝╚═╝  ╚═══╝╚══════╝╚═╝  ╚═╝╚══════╝
-            ---------------------------ARCANE EDITION-------------------------------
+                                                            ███╗   ███╗ █████╗ ███████╗███████╗                          
+                                                            ████╗ ████║██╔══██╗╚══███╔╝██╔════╝                          
+                                                            ██╔████╔██║███████║  ███╔╝ █████╗                            
+                                                            ██║╚██╔╝██║██╔══██║ ███╔╝  ██╔══╝                            
+                                                            ██║ ╚═╝ ██║██║  ██║███████╗███████╗                          
+                                                            ╚═╝     ╚═╝╚═╝  ╚═╝╚══════╝╚══════╝                          
+                                                            ██████╗ ██╗   ██╗███╗   ██╗███╗   ██╗███████╗██████╗ ███████╗
+                                                            ██╔══██╗██║   ██║████╗  ██║████╗  ██║██╔════╝██╔══██╗██╔════╝
+                                                            ██████╔╝██║   ██║██╔██╗ ██║██╔██╗ ██║█████╗  ██████╔╝███████╗
+                                                            ██╔══██╗██║   ██║██║╚██╗██║██║╚██╗██║██╔══╝  ██╔══██╗╚════██║
+                                                            ██║  ██║╚██████╔╝██║ ╚████║██║ ╚████║███████╗██║  ██║███████║
+                                                            ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═══╝╚═╝  ╚═══╝╚══════╝╚═╝  ╚═╝╚══════╝
+                                                            ---------------------------ARCANE EDITION-------------------------------
 
-            Press any key to continue...
-            ";
+                                                            Press any key to continue...
+                                                            ";
 
             public static string CharacterSelectionArt = File.ReadAllText("CharacterArt.txt");
             
