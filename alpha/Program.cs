@@ -1,4 +1,7 @@
-﻿namespace alpha
+﻿using System.ComponentModel.Design;
+using System.Security.Cryptography.X509Certificates;
+
+namespace alpha
 {
     class Program
     {
@@ -174,14 +177,14 @@
 
         public string[,] BoardGeneration()
         {
-            int height = 30; int width = 60;
+            int height = 25; int width = 50;
             string[,] board = new string[height,width];
-            DFS(board,1,0);
+            DFS(board,1,0,height,width);
 
             return board;
         }
 
-            public void DFS(string[,] board, int EntranceX, int EntranceY)
+            public void DFS(string[,] board, int EntranceX, int EntranceY, int height, int width)
             {
                 //ponerlo todo bloqueado
                 for (int i = 0; i < board.GetLength(0); i++)
@@ -205,7 +208,6 @@
                 {
                     (int x, int y) = stack.Pop();
 
-                    board[x, y] = " "; // visitada
                     
                     List<(int, int)> neighbors = UnvisitedNeigh(board,x,y);
 
@@ -213,14 +215,20 @@
                     {
                         (int nx, int ny) = neighbors[random.Next(neighbors.Count)];
                         RemWall(board, x, nx, y, ny);
-                        //stack.Push((nx, ny));
-                        foreach (var neigh in neighbors)
-                        {
-                            stack.Push(neigh);
-                        }
+                        board[nx, ny] = " "; // visitada
+                        stack.Push((x,y));
+                        stack.Push((nx, ny));
+                    
+                        // foreach (var neigh in neighbors)
+                        // {
+                        //     stack.Push(neigh);
+                        // }
+
                     }
                     
                 }
+
+                CarveCenterSquare(board, height, width);
             }
 
             List<(int,int)> UnvisitedNeigh(string[,] board, int x, int y)
@@ -323,6 +331,20 @@
                     }
                     System.Console.WriteLine();
                 }
+            }
+
+            public static string[,] CarveCenterSquare(string[,] board, int height, int width)
+            {
+                
+                for (int i = (height/2)-3; i < (height/2)+2; i++)
+                {
+                    for (int j = (width/2)-3; j < (width/2)+4; j++)
+                    {
+                        board[i,j]= ":";
+                    }
+                }
+
+                return board;
             }
 
         public void PlaceTraps(int trapcount, List<Trap> traps)
