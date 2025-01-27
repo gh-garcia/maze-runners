@@ -1,4 +1,6 @@
-﻿namespace alpha
+﻿using System.Runtime.InteropServices;
+
+namespace alpha
 {
     class Program
     {
@@ -28,11 +30,11 @@
         {
             Token[] tokens = new Token [2];
 
-            Token token1 = new Token("V",(height/2),(width/2),"VI",0,5);
-            Token token2 = new Token("X",(height/2)-1,(width/2),"Caitlyn",0,4);
-            Token token3 = new Token("ث",(height/2)-2,(width/2),"Jayce",0,5);
-            Token token4 = new Token("Ж",(height/2)-3,(width/2),"Viktor",0,3);
-            Token token5 = new Token("ώ",(height/2)+1,(width/2),"Jinx",0,4);
+            Token token1 = new Token("V",1,2,"VI",0,5,0);
+            Token token2 = new Token("X",(height/2)-1,(width/2),"Caitlyn",0,4,0);
+            Token token3 = new Token("ث",(height/2)-2,(width/2),"Jayce",0,5,0);
+            Token token4 = new Token("Ж",(height/2)-3,(width/2),"Viktor",0,4,0);
+            Token token5 = new Token("ώ",(height/2)+1,(width/2),"Jinx",0,4,0);
 
 
             ShowWelcomeScreen();
@@ -44,7 +46,7 @@
             PlaceTraps(trapcount, traps);
             
             BoardDisplay(tokens, board);
-            while (true) //*gameloop
+            while (!WinCondition(1,0)) //*gameloop
             {
                 Console.Clear();
                 BoardDisplay(tokens, board);
@@ -53,6 +55,9 @@
                 TurnManagement(tokens,random);    
                 
             }
+            Console.Clear();
+            System.Console.WriteLine(asciiArt.YOUWON);
+
         }
         public static void ShowWelcomeScreen()
         {
@@ -74,6 +79,7 @@
 |  Moves left:{dado}                                  |
 |                                                |
 |  > Health:{CurrentToken.health}                                    |
+|  > Deathcount:{CurrentToken.deathcount}                                |
 |  > Habilities:                                 |
 |                                                |
 |                                                |
@@ -83,6 +89,7 @@
             ";
             return UI;
         }
+
 
         public void TurnManagement(Token[] tokens, Random random)
         {
@@ -99,6 +106,7 @@
                     CurrentToken.y = newy;
                     CurrentToken.movecount++;
                     dado--;
+                    HandlePlayerDeath(CurrentToken, height, width);
                     TriggerTrapPosition(newx,newy,CurrentToken);
 
                     
@@ -143,7 +151,17 @@
                 
             dado = random.Next(1,7);
             return dado;
+        }
+
+        //!esto esta fulardon ARREGLAR
+        public bool WinCondition(int EntranceX, int EntranceY)
+        {
+            if(CurrentToken.x == 1 && CurrentToken.y == 0)
+            {
+                return true;
             }
+            return false;
+        }
         
 
         public static void TokenSelection(Token[] tokens,Token token1,Token token2,Token token3,Token token4,Token token5)
@@ -361,48 +379,68 @@
                 return board;
             }
 
-        public void PlaceTraps(int trapcount, List<Trap> traps)
-        {
-            Random rand = new Random();
-
-            for (int i = 0; i < trapcount; i++)
+            public static void HandlePlayerDeath(Token CurrentToken, int height, int width)
             {
-                int x = random.Next(1, board.GetLength(0)-1);
-                int y = random.Next(1, board.GetLength(1)-1);
-
-                if(board[x,y] == " ")
+                if(CurrentToken.health == 0)
                 {
-                    string TrapType = GetRandomTrap();
-                    Trap newTrap = new Trap("X", TrapType, x, y);
+                    CurrentToken.x = height/2;
+                    CurrentToken.y = width/2;
+                    CurrentToken.deathcount +=1;
+                    if (CurrentToken.name == "Caitlyn" || CurrentToken.name == "Jinx" || CurrentToken.name == "Viktor" )
+                    {
+                        CurrentToken.health = 4;
+                    }
+                    else
+                    {
+                        CurrentToken.health = 5;
+                    }
 
-                    traps.Add(newTrap);
-                    board[x, y] = newTrap.symbol;
 
-                }
-                else
-                {
-                    i--;
                 }
             }
-        }
 
-        public void TriggerTrapPosition(int x, int y, Token CurrentToken)
-        {
-            foreach (var trap in traps)
+            public void PlaceTraps(int trapcount, List<Trap> traps)
             {
-                if (trap.X == x && trap.Y == y)
+                Random rand = new Random();
+
+                for (int i = 0; i < trapcount; i++)
                 {
-                    trap.Trigger(CurrentToken);
+                    int x = random.Next(1, board.GetLength(0)-1);
+                    int y = random.Next(1, board.GetLength(1)-1);
+
+                    if(board[x,y] == " ")
+                    {
+                        string TrapType = GetRandomTrap();
+                        Trap newTrap = new Trap("X", TrapType, x, y);
+
+                        traps.Add(newTrap);
+                        board[x, y] = newTrap.symbol;
+
+                    }
+                    else
+                    {
+                        i--;
+                    }
                 }
             }
-        }
 
-        public string GetRandomTrap()
-        {
-            string[] TrapTypes = {"dart", "sand", "fog"};
-            int index = random.Next(0, TrapTypes.Length);
-            return TrapTypes[index];
-        }
+            public void TriggerTrapPosition(int x, int y, Token CurrentToken)
+            {
+                foreach (var trap in traps)
+                {
+                    if (trap.X == x && trap.Y == y)
+                    {
+                        trap.Trigger(CurrentToken);
+                    }
+                }
+            }
+
+            public string GetRandomTrap()
+            {
+                string[] TrapTypes = {"dart", "sand", "fog"};
+                int index = random.Next(0, TrapTypes.Length);
+                return TrapTypes[index];
+            }
     }
     public class Token
     {
@@ -412,9 +450,10 @@
         public string name;
         public int movecount;
         public int health;
+        public int deathcount;
 
         //albañil
-        public Token(string symbol, int x, int y, string name, int movecount, int health)
+        public Token(string symbol, int x, int y, string name, int movecount, int health, int deathcount)
         {
             this.symbol = symbol;
             this.x = x; 
@@ -422,6 +461,7 @@
             this.name = name;
             this.movecount = movecount;
             this.health = health;
+            this.deathcount = deathcount;
         }
     }
 
@@ -502,10 +542,27 @@
             Press any key to continue...
             ";
 
+            public static string YOUWON = @"
+
+▓██   ██▓ ▒█████   █    ██     █     █░ ▒█████   ███▄    █ 
+ ▒██  ██▒▒██▒  ██▒ ██  ▓██▒   ▓█░ █ ░█░▒██▒  ██▒ ██ ▀█   █ 
+  ▒██ ██░▒██░  ██▒▓██  ▒██░   ▒█░ █ ░█ ▒██░  ██▒▓██  ▀█ ██▒
+  ░ ▐██▓░▒██   ██░▓▓█  ░██░   ░█░ █ ░█ ▒██   ██░▓██▒  ▐▌██▒
+  ░ ██▒▓░░ ████▓▒░▒▒█████▓    ░░██▒██▓ ░ ████▓▒░▒██░   ▓██░
+   ██▒▒▒ ░ ▒░▒░▒░ ░▒▓▒ ▒ ▒    ░ ▓░▒ ▒  ░ ▒░▒░▒░ ░ ▒░   ▒ ▒ 
+ ▓██ ░▒░   ░ ▒ ▒░ ░░▒░ ░ ░      ▒ ░ ░    ░ ▒ ▒░ ░ ░░   ░ ▒░
+ ▒ ▒ ░░  ░ ░ ░ ▒   ░░░ ░ ░      ░   ░  ░ ░ ░ ▒     ░   ░ ░ 
+ ░ ░         ░ ░     ░            ░        ░ ░           ░ 
+ ░ ░                                                       
+You don't know exactly why you wanted to leave the maze in the first place, truth is you lived comfortably there, who knows the horrors that await outside...
+";
+
             public static string CharacterSelectionArt = File.ReadAllText("CharacterArt.txt");
             
-            
-            
+            public static string deathmessage = "You died, back to the beginning";
+            public static string dartmessage = "You've stepped on a plate and a dart shot out a wall. Your HP is reduced by 1";
+            public static string sandmessage = "You were swallowed by moving sand, the rest of your turn is gone";
+            public static string fogmessage = "A thick fog surrounds you, you can't see";
     }
 
 }
