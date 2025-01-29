@@ -1,6 +1,4 @@
-﻿using System.Runtime.InteropServices;
-
-namespace alpha
+﻿namespace alpha
 {
     class Program
     {
@@ -22,7 +20,7 @@ namespace alpha
         List<Trap> traps = new List<Trap>();
         int trapcount = 8;
 
-        //array de direcciones
+        
         int[] DX = {0,-1,0,1};
         int[] DY = {1,0,-1,0};
 
@@ -38,7 +36,7 @@ namespace alpha
 
 
             ShowWelcomeScreen();
-            //*debe haber una manera mejor de hacer esto
+                              //?should be a better way to do this
             TokenSelection(tokens,token1,token2,token3,token4,token5);
             CurrentToken = tokens[0];
 
@@ -107,15 +105,12 @@ namespace alpha
                     CurrentToken.movecount++;
                     dado--;
                     HandlePlayerDeath(CurrentToken, height, width);
-                    TriggerTrapPosition(newx,newy,CurrentToken);
-
-                    
+                    TriggerTrapPosition(newx,newy,CurrentToken);  
                 }
             }
 
             else
             {
-
                 CurrentToken.movecount = 0;
 
                 if(IsPlayer2Turn == false)
@@ -130,11 +125,7 @@ namespace alpha
                     IsPlayer2Turn = false;
                 }
                 dado = DiceThrow(0,random);
-          }
-
-          
-          
-            
+          }       
         }
 
         public int DiceThrow(int dado, Random random)
@@ -153,9 +144,10 @@ namespace alpha
             return dado;
         }
 
-        //!esto esta fulardon ARREGLAR
+        //!FIX
         public bool WinCondition(int EntranceX, int EntranceY)
         {
+            //*Checks if player reached the entrance/exit of the maze
             if(CurrentToken.x == 1 && CurrentToken.y == 0)
             {
                 return true;
@@ -166,8 +158,7 @@ namespace alpha
 
         public static void TokenSelection(Token[] tokens,Token token1,Token token2,Token token3,Token token4,Token token5)
         {
-
-
+            //*Handles input for choosing a player, stores the selection in an 2 space array
             for (int i = 0; i <= 1; i++)
             {
 
@@ -208,8 +199,6 @@ namespace alpha
 
         public string[,] BoardGeneration()
         {
-            
-
             string[,] board = new string[height,width];
             DFS(board,1,0,height,width);
 
@@ -218,7 +207,7 @@ namespace alpha
 
             public void DFS(string[,] board, int EntranceX, int EntranceY, int height, int width)
             {
-                //ponerlo todo bloqueado
+                //*start the maze blocked completely
                 for (int i = 0; i < board.GetLength(0); i++)
                 {
                     for (int j = 0; j < board.GetLength(1); j++)
@@ -226,14 +215,11 @@ namespace alpha
                         board[i,j] = "█";
                     }
                 }
-
+                
                 Stack<(int,int)> stack = new Stack<(int, int)>();
-                
+                stack.Push((EntranceX,EntranceY));  
 
-                stack.Push((EntranceX,EntranceY));
-                
-
-                board[EntranceX,EntranceY] = " ";  //visitadas
+                board[EntranceX,EntranceY] = " ";  //visited
                 Random random = new Random();
 
                 while (stack.Count > 0)
@@ -247,15 +233,9 @@ namespace alpha
                     {
                         (int nx, int ny) = neighbors[random.Next(neighbors.Count)];
                         RemWall(board, x, nx, y, ny);
-                        board[nx, ny] = " "; // visitada
+                        board[nx, ny] = " "; // visited
                         stack.Push((x,y));
                         stack.Push((nx, ny));
-                    
-                        // foreach (var neigh in neighbors)
-                        // {
-                        //     stack.Push(neigh);
-                        // }
-
                     }
                     
                 }
@@ -286,29 +266,24 @@ namespace alpha
             }
 
             private static bool ValidPosition(int m, int n, int x, int y)
-            {
+            {   
+                //* Checks if the position is valid (in bounds and inside the walls of the maze)
                 return x >= 1 && x < m-1&& y >= 1 && y < n-1;   
             }
 
             static void RemWall(string[,] board, int x1, int x2, int y1, int y2)
             {
-                // if (x1 < 0 || x1 >= board.GetLength(0) || y1 < 0 || y1 >= board.GetLength(1) || x2 < 0 || x2 >= board.GetLength(0) || y2 < 0 || y2 >= board.GetLength(1))
-                // {
-                //     return;  //cosa fuera de limites
-                // }
                 int wallX = (x1 + x2) / 2;
                 int wallY = (y1 + y2) / 2;
 
-                // if (wallX < 0 || wallX >= board.GetLength(0) || wallY < 0 || wallY >= board.GetLength(1))
-                // {
-                //     return; 
-                // }
-                board[wallX, wallY] = " "; 
+                board[wallX, wallY] = " "; //visited
             }
 
 
             public static (int x,int y) MoveToken(string[,] board,int x,int y)
             {
+                //?I could change this and use a direction array but i did this when i still didn't know about it 
+
                 var keyInfo = Console.ReadKey(true);
 
                 if (keyInfo.Key == ConsoleKey.UpArrow)
@@ -333,7 +308,7 @@ namespace alpha
             
             public static bool CanMove(string[,] board,int x,int y)
             {
-                //*checks if the square i want to move the token to is taken by something
+                //*Checks if the square i want to move the token to is taken by something
                 if(board[x,y]== "█")
                 {
                     return false;
@@ -342,6 +317,7 @@ namespace alpha
             }
             public static void BoardDisplay(Token[] tokens, string[,] board)
             {
+                //*Simple array printing, checks where the player is and instead of printing the board prints the character
                 for (int i = 0; i < board.GetLength(0); i++)
                 {
                     for (int j = 0; j < board.GetLength(1) ; j++)
@@ -367,7 +343,7 @@ namespace alpha
 
             public static string[,] CarveCenterSquare(string[,] board, int height, int width)
             {
-                
+                //*Empty array that prints in the middle of the board according to its size
                 for (int i = (height/2)-3; i < (height/2)+2; i++)
                 {
                     for (int j = (width/2)-3; j < (width/2)+4; j++)
@@ -381,6 +357,7 @@ namespace alpha
 
             public static void HandlePlayerDeath(Token CurrentToken, int height, int width)
             {
+                //* Checks if player health is 0, changes the player position back to the start center square and sets their health according to each token
                 if(CurrentToken.health == 0)
                 {
                     CurrentToken.x = height/2;
@@ -401,6 +378,7 @@ namespace alpha
 
             public void PlaceTraps(int trapcount, List<Trap> traps)
             {
+                
                 Random rand = new Random();
 
                 for (int i = 0; i < trapcount; i++)
@@ -452,7 +430,6 @@ namespace alpha
         public int health;
         public int deathcount;
 
-        //albañil
         public Token(string symbol, int x, int y, string name, int movecount, int health, int deathcount)
         {
             this.symbol = symbol;
@@ -472,8 +449,6 @@ namespace alpha
         public int X;
         public int Y;
 
-
-        //constructor de Trap
         public Trap(string symbol, string type, int X, int Y)
         {
             this.type = type;
@@ -522,8 +497,8 @@ namespace alpha
 
 
     public static class asciiArt
-    {// es static para que cuando vaya para alla arriba no tener que hacer NEW ASCIIART etc... funciona sin tener que crear instancias, un almacen de cosas
-    //despues descubri que lo puedo poner en txt pero es que maze runners aqui me gusta XD
+    {
+        //*Vault with the asciiart i use 
             public static string WelcomeScreen = @"
             ███╗   ███╗ █████╗ ███████╗███████╗                          
             ████╗ ████║██╔══██╗╚══███╔╝██╔════╝                          
