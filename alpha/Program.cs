@@ -1,4 +1,6 @@
-﻿namespace alpha
+﻿using System.Transactions;
+
+namespace alpha
 {
     class Program
     {
@@ -11,6 +13,7 @@
     public class Board
     {
         Token CurrentToken;
+        Token OtherToken; //used in Wizard Trap
         string[,] board;
         int height = 25;
         int width = 50;
@@ -31,17 +34,17 @@
 
             //!I used initials for the skills because different legths break the UI
             Token token1 = new Token("V",1,2,"VI",0,5,0,"LC"); //? there is a 1 in 1000 chance to be teleported to the exit
-            Token token2 = new Token("X",(height/2)-1,(width/2),"Caitlyn",0,4,0,"MC"); //? there is a 50% chance that if health reaches 0 a health point is granted
-            Token token3 = new Token("ث",(height/2)-2,(width/2),"Jayce",0,5,0,"HL"); //? gains +1 health every 5 turns
-            Token token4 = new Token("Ж",(height/2)-3,(width/2),"Viktor",0,4,0,"SP"); //? gains +1 to dicethrow every 5 turns
-            Token token5 = new Token("ώ",(height/2)+1,(width/2),"Jinx",0,4,0,"TD"); //? can disarm all traps
+            Token token2 = new Token("C",(height/2)-1,(width/2),"Caitlyn",0,4,0,"MC"); //? there is a 50% chance that if health reaches 0 a health point is granted
+            Token token3 = new Token("J",(height/2)-2,(width/2),"Jayce",0,5,0,"HL"); //? gains +1 health every 5 turns
+            Token token4 = new Token("K",(height/2)-3,(width/2),"Viktor",0,4,0,"SP"); //? gains +1 to dicethrow every 5 turns
+            Token token5 = new Token("X",(height/2)+1,(width/2),"Jinx",0,4,0,"TD"); //? can disarm all traps
 
 
             ShowWelcomeScreen();
                               //?should be a better way to do this
             TokenSelection(tokens,token1,token2,token3,token4,token5);
             CurrentToken = tokens[0];
-
+            OtherToken = tokens[1]; //used in Wizard trap
             board = BoardGeneration();
             PlaceTraps(trapcount, traps);
             
@@ -122,12 +125,14 @@
                 if(IsPlayer2Turn == false)
                 {
                     CurrentToken = tokens[0];
+                    OtherToken = tokens[1];   //used in Wizard Trap
                     IsPlayer2Turn = true;
                 }
 
                 else
                 {
                     CurrentToken = tokens[1];
+                    OtherToken = tokens[0]; //used in Wizard Trap
                     IsPlayer2Turn = false;
                 }
                 CurrentToken.movecount = DiceThrow(0,random);
@@ -151,15 +156,12 @@
             return dado;
         }
 
-        //!FIX
+        
         public bool WinCondition(int EntranceX, int EntranceY)
         {
             //*Checks if player reached the entrance/exit of the maze
-            if(CurrentToken.x == 1 && CurrentToken.y == 0)
-            {
-                return true;
-            }
-            return false;
+            return CurrentToken.x == 1 && CurrentToken.y == 0;
+            
         }
         
 
@@ -170,7 +172,13 @@
             {
 
             System.Console.WriteLine(asciiArt.CharacterSelectionArt);
-           var keyInfo = Console.ReadKey(true);
+            var keyInfo = Console.ReadKey(true);
+
+            while(keyInfo.Key != ConsoleKey.D1 && keyInfo.Key != ConsoleKey.D2 && keyInfo.Key != ConsoleKey.D3 && keyInfo.Key != ConsoleKey.D4 && keyInfo.Key != ConsoleKey.D5 )
+            {   
+                keyInfo = Console.ReadKey(true);
+                System.Console.WriteLine("Wrong key...");
+            }
 
            if (keyInfo.Key == ConsoleKey.D1)
             {   
@@ -192,14 +200,10 @@
             {   
                 tokens[i] = token5;
             }
-            else 
-            {
-                throw new ArgumentException("esa tecla no porfavo");
-            
-            }
+    
               System.Console.WriteLine("Confirm selection: ENTER");  
               var enterpressed = Console.ReadKey(true);
-
+              Console.Clear();
             }
         }
         
@@ -415,7 +419,7 @@
                 {
                     if (trap.X == x && trap.Y == y)
                     {
-                        LastTrapMessage = trap.Trigger(CurrentToken);
+                        LastTrapMessage = trap.Trigger(CurrentToken, OtherToken);
                     }
                 }
             }
@@ -528,7 +532,20 @@
             }
         }
 
-        public string Trigger(Token CurrentToken)
+        public void TriggerWizardTrap(Token CurrentToken, Token OtherToken )
+        {
+            int tempX = CurrentToken.x;
+            int tempY = CurrentToken.y;
+
+            CurrentToken.x = OtherToken.x;
+            CurrentToken.y = OtherToken.y;
+
+            OtherToken.x = tempX;
+            OtherToken.y = tempY;
+
+        }
+
+        public string Trigger(Token CurrentToken, Token OtherToken)
         {
             string message ="";
             if (CurrentToken.Skill == "TD")
@@ -550,8 +567,7 @@
                 else if (this.type == "wizard")
                 {
                     message = "A wizard appeared, took a look and didn't like you, he waved around is staff, you have now traded positions with the other player";
-                    //!AQUI IRIA LO QUE HAY QUE HACER SI SUPIERA COMO HACERLO POR AHORA ES:
-                    //* TriggerWizardTrap();
+                    TriggerWizardTrap(CurrentToken, OtherToken);
                 }     
                 
             }
