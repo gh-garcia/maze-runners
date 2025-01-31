@@ -18,7 +18,7 @@
         bool IsPlayer2Turn = true;
         private Random random = new Random();
         List<Trap> traps = new List<Trap>();
-        int trapcount = 8;
+        int trapcount = 30;
 
         
         int[] DX = {0,-1,0,1};
@@ -28,11 +28,11 @@
         {
             Token[] tokens = new Token [2];
 
-            Token token1 = new Token("V",1,2,"VI",0,5,0);
-            Token token2 = new Token("X",(height/2)-1,(width/2),"Caitlyn",0,4,0);
-            Token token3 = new Token("ث",(height/2)-2,(width/2),"Jayce",0,5,0);
-            Token token4 = new Token("Ж",(height/2)-3,(width/2),"Viktor",0,4,0);
-            Token token5 = new Token("ώ",(height/2)+1,(width/2),"Jinx",0,4,0);
+            Token token1 = new Token("V",1,2,"VI",0,5,0,"Lucky Charm"); //? there is a 1 in 1000 chance for her to be teleported to the exit
+            Token token2 = new Token("X",(height/2)-1,(width/2),"Caitlyn",0,4,0,"Mercy"); //? there is a 50% chance that if her health reaches 0 a health point is granted
+            Token token3 = new Token("ث",(height/2)-2,(width/2),"Jayce",0,5,0,"Heal"); //? gains +1 health every 5 turns
+            Token token4 = new Token("Ж",(height/2)-3,(width/2),"Viktor",0,4,0,"Sprint"); //? gains +1 to dicethrow every 5 turns
+            Token token5 = new Token("ώ",(height/2)+1,(width/2),"Jinx",0,4,0,"Trap Disarm"); //? can disarm all traps
 
 
             ShowWelcomeScreen();
@@ -78,10 +78,9 @@
 |                                                |
 |  > Health:{CurrentToken.health}                                    |
 |  > Deathcount:{CurrentToken.deathcount}                                |
-|  > Habilities:                                 |
+|  > Skill:                                 |
 |                                                |
-|                                                |
-|  :)                                            |
+|                                              |
 |                                                |
 +------------------------------------------------+
             ";
@@ -91,6 +90,8 @@
 
         public void TurnManagement(Token[] tokens, Random random)
         {
+            CurrentToken.DoSkill(CurrentToken, dado);
+
             if(dado > 0)
             {
                 int newx;
@@ -107,11 +108,13 @@
                     HandlePlayerDeath(CurrentToken, height, width);
                     TriggerTrapPosition(newx,newy,CurrentToken);  
                 }
+                
             }
-
+            
             else
             {
                 CurrentToken.movecount = 0;
+                CurrentToken.Cool--;
 
                 if(IsPlayer2Turn == false)
                 {
@@ -429,8 +432,11 @@
         public int movecount;
         public int health;
         public int deathcount;
+        public string Skill;
 
-        public Token(string symbol, int x, int y, string name, int movecount, int health, int deathcount)
+        public int Cool = 1;
+
+        public Token(string symbol, int x, int y, string name, int movecount, int health, int deathcount, string Skill)
         {
             this.symbol = symbol;
             this.x = x; 
@@ -439,6 +445,51 @@
             this.movecount = movecount;
             this.health = health;
             this.deathcount = deathcount;
+            this.Skill = Skill;
+        }
+
+        public void DoSkill(Token CurrentToken, int dice)
+        {
+            //*Trap Disarm is implemented over at Trigger()
+
+            if (CurrentToken.Skill == "Lucky Charm")
+            {
+                Random random = new();
+                if (random.Next(1,1001) == 1)
+                {
+                    CurrentToken.x = 2;
+                    CurrentToken.y = 0;
+                    System.Console.WriteLine($"WOWOWOWOW IT'S A MIRACLE YOU SOMEHOW MADE IT NEXT TO THE EXIT,{CurrentToken.name} you are free to go");
+                }
+            }
+            else if (CurrentToken.Skill == "Mercy" && CurrentToken.health == 0)
+            {
+                Random random = new Random();
+                if (random.Next(1,101) <= 50)
+                {
+                CurrentToken.health = 1;
+                System.Console.WriteLine($"You somehow keep getting your way, {CurrentToken.name}, your life has been spared once again");  
+                }
+            }
+            else if (CurrentToken.Skill == "Heal")
+            {
+                if (Cool == 0)
+                {
+                    CurrentToken.health++;
+                    Cool = 5;
+                    System.Console.WriteLine($"You healed yourself, {CurrentToken.name} lives another day");
+                }
+            }
+            else if (CurrentToken.Skill == "Sprint")
+            {
+                if(Cool == 0)
+                {
+                    dice++;
+                    Cool = 5;
+                    System.Console.WriteLine($"{CurrentToken.name} used Sprint, +1 has been added to your dicethrow");
+                }
+            }
+
         }
     }
 
@@ -475,21 +526,29 @@
 
         public void Trigger(Token CurrentToken)
         {
-            if (this.type == "dart")
+            if (CurrentToken.Skill == "Trap Disarm")
             {
-                System.Console.WriteLine("You've stepped on a plate and a dart shot out a wall. Your HP is reduced by 1");
-                CurrentToken.health -= 1;
+                System.Console.WriteLine("You disarmed the trap");
             }
-            else if (this.type == "sand")
+            else
             {
-                System.Console.WriteLine("You were swallowed by moving sand, the rest of your turn is gone");
-                CurrentToken.movecount = 0;
-            }
-            else if (this.type == "fog")
-            {
-                System.Console.WriteLine("A thick fog surrounds you, you can't see");
-                //!AQUI IRIA LO QUE HAY QUE HACER SI SUPIERA COMO HACERLO POR AHORA ES:
-                //* TriggerFogTrap();
+                if (this.type == "dart")
+                {
+                    System.Console.WriteLine("You've stepped on a plate and a dart shot out a wall. Your HP is reduced by 1");
+                    CurrentToken.health -= 1;
+                }
+                else if (this.type == "sand")
+                {
+                    System.Console.WriteLine("You were swallowed by moving sand, the rest of your turn is gone");
+                    CurrentToken.movecount = 0;
+                }
+                else if (this.type == "fog")
+                {
+                    System.Console.WriteLine("A thick fog surrounds you, you can't see");
+                    //!AQUI IRIA LO QUE HAY QUE HACER SI SUPIERA COMO HACERLO POR AHORA ES:
+                    //* TriggerFogTrap();
+                }     
+                
             }
         }
     }
