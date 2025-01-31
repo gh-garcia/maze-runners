@@ -78,12 +78,12 @@
             Player Turn:{CurrentToken.name}         
 +------------------------------------------------+
 |                                                |
-|  Moves left:{dado}                                  |
+|  Moves left:{CurrentToken.movecount}                                  |
 |                                                |
 |  > Health:{CurrentToken.health}                                    |
 |  > Deathcount:{CurrentToken.deathcount}                                |
 |  > Skill:{CurrentToken.Skill}                                    |
-|  > {LastTrapMessage}                                             |
+|  >{LastTrapMessage}                                             |
 |                                                |
 |                                                |
 +------------------------------------------------+
@@ -94,9 +94,9 @@
 
         public void TurnManagement(Token[] tokens, Random random)
         {
-            CurrentToken.DoSkill(CurrentToken, dado);
+            CurrentToken.DoSkill();
 
-            if(dado > 0)
+            if(CurrentToken.movecount > 0)
             {
                 int newx;
                 int newy;
@@ -107,8 +107,7 @@
                 {
                     CurrentToken.x = newx;
                     CurrentToken.y = newy;
-                    CurrentToken.movecount++;
-                    dado--;
+                    CurrentToken.movecount--;
                     HandlePlayerDeath(CurrentToken, height, width);
                     TriggerTrapPosition(newx,newy,CurrentToken);  
                 }
@@ -131,7 +130,7 @@
                     CurrentToken = tokens[1];
                     IsPlayer2Turn = false;
                 }
-                dado = DiceThrow(0,random);
+                CurrentToken.movecount = DiceThrow(0,random);
                 LastTrapMessage = "";
           }       
         }
@@ -379,7 +378,7 @@
                     {
                         CurrentToken.health = 5;
                     }
-
+                    System.Console.WriteLine(asciiArt.deathmessage);
 
                 }
             }
@@ -453,45 +452,45 @@
             this.Skill = Skill;
         }
 
-        public void DoSkill(Token CurrentToken, int dice)
+        public void DoSkill()
         {
             //*Trap Disarm is implemented over at Trigger()
 
-            if (CurrentToken.Skill == "LC")
+            if (Skill == "LC")
             {
                 Random random = new();
                 if (random.Next(1,1001) == 1)
                 {
-                    CurrentToken.x = 2;
-                    CurrentToken.y = 0;
-                    System.Console.WriteLine($"WOWOWOWOW IT'S A MIRACLE YOU SOMEHOW MADE IT NEXT TO THE EXIT,{CurrentToken.name} you are free to go");
+                    x = 2;
+                    y = 0;
+                    System.Console.WriteLine($"WOWOWOWOW IT'S A MIRACLE YOU SOMEHOW MADE IT NEXT TO THE EXIT,{name} you are free to go");
                 }
             }
-            else if (CurrentToken.Skill == "MC" && CurrentToken.health == 0)
+            else if (Skill == "MC" && health == 0)
             {
                 Random random = new Random();
                 if (random.Next(1,101) <= 50)
                 {
-                CurrentToken.health = 1;
-                System.Console.WriteLine($"You somehow keep getting your way, {CurrentToken.name}, your life has been spared once again");  
+                health = 1;
+                System.Console.WriteLine($"You somehow keep getting your way, {name}, your life has been spared once again");  
                 }
             }
-            else if (CurrentToken.Skill == "HL")
+            else if (Skill == "HL")
             {
                 if (Cool == 0)
                 {
-                    CurrentToken.health++;
+                    health++;
                     Cool = 5;
-                    System.Console.WriteLine($"You healed yourself, {CurrentToken.name} lives another day");
+                    System.Console.WriteLine($"You healed yourself, {name} lives another day");
                 }
             }
-            else if (CurrentToken.Skill == "SP")
+            else if (Skill == "SP")
             {
                 if(Cool == 0)
                 {
-                    dice++;
+                    movecount++;
                     Cool = 5;
-                    System.Console.WriteLine($"{CurrentToken.name} used Sprint, +1 has been added to your dicethrow");
+                    System.Console.WriteLine($"{name} used Sprint, +1 has been added to your dicethrow");
                 }
             }
 
@@ -601,9 +600,7 @@ You don't know exactly why you wanted to leave the maze in the first place, trut
             public static string CharacterSelectionArt = File.ReadAllText("CharacterArt.txt");
             
             public static string deathmessage = "You died, back to the beginning";
-            public static string dartmessage = "You've stepped on a plate and a dart shot out a wall. Your HP is reduced by 1";
-            public static string sandmessage = "You were swallowed by moving sand, the rest of your turn is gone";
-            public static string fogmessage = "A thick fog surrounds you, you can't see";
+            
     }
 
 }
