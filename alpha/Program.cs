@@ -47,6 +47,7 @@
             BoardGeneration.PlaceTraps(TrapCount, traps, board);
             
             BoardGeneration.BoardDisplay(tokens, board);
+            CurrentToken.movecount = RRandom.Next(1,7);
 
             while (!WinCondition(1,0)) //*gameloop
             {
