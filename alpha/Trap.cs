@@ -59,7 +59,7 @@ public class Trap
             string message ="";
             if (CurrentToken.Skill == "TD")
             {
-                System.Console.WriteLine("You disarmed the trap");
+                message = "You disarmed the trap";
             }
             else
             {

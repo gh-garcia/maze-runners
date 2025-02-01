@@ -34,8 +34,8 @@
             Token token1 = new Token("V",(Height/2),(Width/2),"VI",0,5,0,"LC");
             Token token2 = new Token("C",(Height/2)-1,(Width/2),"Caitlyn",0,4,0,"MC");
             Token token3 = new Token("J",(Height/2)-2,(Width/2),"Jayce",0,5,0,"HL"); 
-            Token token4 = new Token("K",(Height/2)-3,(Width/2),"Viktor",0,4,0,"SP"); //? 
-            Token token5 = new Token("X",(Height/2)+1,(Width/2),"Jinx",0,4,0,"TD"); //? 
+            Token token4 = new Token("K",(Height/2)-3,(Width/2),"Viktor",0,4,0,"SP"); 
+            Token token5 = new Token("X",(Height/2)+1,(Width/2),"Jinx",0,4,0,"TD");  
 
 
             ShowWelcomeScreen();
