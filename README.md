@@ -44,7 +44,7 @@ This repository hosts the code and resources for a first-year college project: a
 | Basic UI                      | <span style="color:green">Done</span> | Low        |                                                                       |
 | Traps             | <span style="color:green">Done</span> | Medium     | **Dart** - Player health is decreased by 1<br>**Sand** - Player loses the rest of its turn<br>**Wizard** - Player is teleported to the other player's position |
 | Randomize traps and objects   | <span style="color:green">Done</span> | Medium     |                                                                       |
-| Skills and Cooldowns          | <span style="color:green">Done</span> | High       | **Vi: Lucky Charm** - There is a 1 in 1000 chance to be teleported to the exit<br>**Calibre: Mercy** - There is a 50% chance that if health reaches 0, a health point is granted<br>**Jayce: Heal** - Gains +1 health every 5 turns<br>**Viktor: Sprint** - Gains +1 to dice throw every 5 turns<br>**Jinx: Tap Diasm** - Can disarm all traps |
+| Skills and Cooldowns          | <span style="color:green">Done</span> | High       | **Vi: Lucky Charm** - There is a 1 in 1000 chance to be teleported to the exit<br>**Calibre: Mercy** - There is a 50% chance that if health reaches 0, a health point is granted<br>**Jayce: Heal** - Gains +1 health every 5 turns<br>**Viktor: Sprint** - Gains +1 to dice throw every 5 turns<br>**Jinx: Tap Disarm** - Can disarm all traps |
 
 # 🔗 Useful Links
 
