@@ -67,6 +67,38 @@ Follow these steps to run your .NET console game:
 | Randomize traps and objects   | <span style="color:green">Done</span> | Medium     |                                                                       |
 | Skills and Cooldowns          | <span style="color:green">Done</span> | High       | **Vi: Lucky Charm** - There is a 1 in 1000 chance to be teleported to the exit<br>**Calibre: Mercy** - There is a 50% chance that if health reaches 0, a health point is granted<br>**Jayce: Heal** - Gains +1 health every 5 turns<br>**Viktor: Sprint** - Gains +1 to dice throw every 5 turns<br>**Jinx: Tap Disarm** - Can disarm all traps |
 
+# 🎮 Architecture
+
+## Classes
+- **Game**: Manages the main game logic and flow.
+- **BoardGeneration**: Handles the creation and display of the maze board.
+- **Token**: Represents the player tokens (characters like Vi, Caitlyn, etc.).
+- **Trap**: Manages traps and their effects on players.
+- **AsciiArt**: Handles ASCII art displays, such as the "YOU WON" message.
+
+## Description of the Game Loop
+
+The game loop is the core mechanism that keeps the game running until a player wins.
+
+1. **Console.Clear**:  
+   The console screen is cleared at the start of each iteration to ensure the display is updated correctly and free of previous output.
+   (Just don't scroll it will break the magic). The game works by clearing and reprinting the board.
+
+2. **BoardDisplay Method**:  
+   The current state of the maze is rendered, showing the positions of the players (tokens), traps, and other objects. This provides a visual representation of the game world.
+
+3. **ShowUI Method**:  
+   The user interface is displayed, which includes relevant information such as player stats, turn details, or instructions for the current player.
+
+4. **TurnManagement Method**:  
+   The turn management system handles player actions, including rolling the dice, moving tokens,activating skills, managing cooldowns and interacting with traps or objects. It will wait for the player input to continue with the execution.
+
+5. **WinCondition Method**:  
+   After each turn, the game checks if the win condition has been met (e.g., a player reaches the exit). If the condition is satisfied, the loop ends.
+
+6. **YOUWON**:  
+   Once the loop ends, a "YOU WON" message is displayed using ASCII art to celebrate the winning player.
+
 
 # 🔗 Useful Links
 
