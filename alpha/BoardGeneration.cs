@@ -103,9 +103,9 @@ public class BoardGeneration
                         bool CharacterWasPrinted = false;
                         for (int m = 0; m < 2; m++)
                         {
-                            if(i == tokens[m].x && j == tokens[m].y )
+                            if(i == tokens[m].X && j == tokens[m].Y )
                             {
-                            System.Console.Write(tokens[m].symbol);
+                            System.Console.Write(tokens[m].Symbol);
                             CharacterWasPrinted = true;
                             }
                         }

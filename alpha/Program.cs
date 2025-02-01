@@ -47,7 +47,7 @@
             BoardGeneration.PlaceTraps(TrapCount, traps, board);
             
             BoardGeneration.BoardDisplay(tokens, board);
-            CurrentToken.movecount = RRandom.Next(1,7);
+            CurrentToken.Movecount = RRandom.Next(1,7);
 
             while (!WinCondition(1,0)) //*gameloop
             {
@@ -77,13 +77,13 @@
         {
             string UI = $@"
 +------------------------------------------------+
-            Player Turn:{CurrentToken.name}         
+            Player Turn:{CurrentToken.Name}         
 +------------------------------------------------+
 |                                                |
-|  Moves left:{CurrentToken.movecount}                                  |
+|  Moves left:{CurrentToken.Movecount}                                  |
 |                                                |
-|  > Health:{CurrentToken.health}                                    |
-|  > Deathcount:{CurrentToken.deathcount}                                |
+|  > Health:{CurrentToken.Health}                                    |
+|  > Deathcount:{CurrentToken.DeathCount}                                |
 |  > Skill:{CurrentToken.Skill}                                    |
 |  >{LastTrapMessage}                                             |
 |                                                |
@@ -98,7 +98,7 @@
         {
             CurrentToken.DoSkill();
 
-            if(CurrentToken.movecount > 0)
+            if(CurrentToken.Movecount > 0)
             {
                 int newx;
                 int newy;
@@ -107,18 +107,18 @@
 
                 if(BoardGeneration.CanMove(board,newx,newy))
                 {
-                    CurrentToken.x = newx;
-                    CurrentToken.y = newy;
-                    CurrentToken.movecount--;
+                    CurrentToken.X = newx;
+                    CurrentToken.Y = newy;
+                    CurrentToken.Movecount--;
                     CurrentToken.HandlePlayerDeath(Height, Width);
-                    Trap.TriggerTrapPosition(newx,newy,CurrentToken, traps, OtherToken, LastTrapMessage);  
+                    LastTrapMessage = Trap.TriggerTrapPosition(newx,newy,CurrentToken, traps, OtherToken, LastTrapMessage);  
                 }
                 
             }
             
             else
             {
-                CurrentToken.movecount = 0;
+                CurrentToken.Movecount = 0;
                 CurrentToken.Cool--;
 
                 if(IsPlayer2Turn == false)
@@ -134,7 +134,7 @@
                     OtherToken = tokens[0]; //used in Wizard Trap
                     IsPlayer2Turn = false;
                 }
-                CurrentToken.movecount = DiceThrow(0,random);
+                CurrentToken.Movecount = DiceThrow(0,random);
                 LastTrapMessage = "";
           }       
         }
@@ -159,7 +159,7 @@
         public bool WinCondition(int EntranceX, int EntranceY)
         {
             //*Checks if player reached the entrance/exit of the maze
-            return CurrentToken.x == 1 && CurrentToken.y == 0;
+            return CurrentToken.X == 1 && CurrentToken.Y == 0;
             
         }
 

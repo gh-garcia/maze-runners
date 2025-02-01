@@ -1,25 +1,27 @@
+using System.Security.Cryptography.X509Certificates;
+
 public class Token
     {
-        public string symbol;
-        public int x;
-        public int y;
-        public string name;
-        public int movecount;
-        public int health;
-        public int deathcount;
+        public string Symbol;
+        public int X;
+        public int Y;
+        public string Name;
+        public int Movecount;
+        public int Health;
+        public int DeathCount;
         public string Skill;
 
         public int Cool = 1;
 
         public Token(string symbol, int x, int y, string name, int movecount, int health, int deathcount, string Skill)
         {
-            this.symbol = symbol;
-            this.x = x; 
-            this.y = y;
-            this.name = name;
-            this.movecount = movecount;
-            this.health = health;
-            this.deathcount = deathcount;
+            this.Symbol = symbol;
+            this.X = x; 
+            this.Y = y;
+            this.Name = name;
+            this.Movecount = movecount;
+            this.Health = health;
+            this.DeathCount = deathcount;
             this.Skill = Skill;
         }
         public static void TokenSelection(Token[] tokens,Token token1,Token token2,Token token3,Token token4,Token token5)
@@ -67,27 +69,29 @@ public class Token
 
         public (int x,int y) MoveToken()
             {
+                int newX = X;
+                int newY = Y;
                 //?I could change this and use a direction array but i did this when i still didn't know about it (nostalgia)
 
                 var keyInfo = Console.ReadKey(true);
 
                 if (keyInfo.Key == ConsoleKey.UpArrow)
                 {   
-                    x--;
+                    newX--;
                 }
                 else if (keyInfo.Key == ConsoleKey.DownArrow)
                 {   
-                    x++;
+                    newX++;
                 }
                 else if (keyInfo.Key == ConsoleKey.LeftArrow)
                 {   
-                    y--;  
+                    newY--;  
                 }
                 else if (keyInfo.Key == ConsoleKey.RightArrow)
                 {   
-                    y++; 
+                    newY++; 
                 }
-                return(x,y);
+                return(newX,newY);
                 
             }
 
@@ -100,36 +104,36 @@ public class Token
                 Random random = new();
                 if (random.Next(1,1001) == 1)
                 {
-                    x = 2;
-                    y = 0;
-                    System.Console.WriteLine($"WOWOWOWOW IT'S A MIRACLE YOU SOMEHOW MADE IT NEXT TO THE EXIT,{name} you are free to go");
+                    X = 2;
+                    Y = 0;
+                    System.Console.WriteLine($"WOWOWOWOW IT'S A MIRACLE YOU SOMEHOW MADE IT NEXT TO THE EXIT,{Name} you are free to go");
                 }
             }
-            else if (Skill == "MC" && health == 0)
+            else if (Skill == "MC" && Health == 0)
             {
                 Random random = new Random();
                 if (random.Next(1,101) <= 50)
                 {
-                health = 1;
-                System.Console.WriteLine($"You somehow keep getting your way, {name}, your life has been spared once again");  
+                Health = 1;
+                System.Console.WriteLine($"You somehow keep getting your way, {Name}, your life has been spared once again");  
                 }
             }
             else if (Skill == "HL")
             {
                 if (Cool == 0)
                 {
-                    health++;
+                    Health++;
                     Cool = 5;
-                    System.Console.WriteLine($"You healed yourself, {name} lives another day");
+                    System.Console.WriteLine($"You healed yourself, {Name} lives another day");
                 }
             }
             else if (Skill == "SP")
             {
                 if(Cool == 0)
                 {
-                    movecount++;
+                    Movecount++;
                     Cool = 5;
-                    System.Console.WriteLine($"{name} used Sprint, +1 has been added to your dicethrow");
+                    System.Console.WriteLine($"{Name} used Sprint, +1 has been added to your dicethrow");
                 }
             }
 
@@ -138,18 +142,18 @@ public class Token
         public void HandlePlayerDeath(int height, int width)
             {
                 //* Checks if player health is 0, changes the player position back to the start center square and sets their health according to each token
-                if(health == 0)
+                if(Health == 0)
                 {
-                    x = height/2;
-                    y = width/2;
-                    deathcount +=1;
-                    if (name == "Caitlyn" || name == "Jinx" || name == "Viktor" )
+                    X = height/2;
+                    Y = width/2;
+                    DeathCount +=1;
+                    if (Name == "Caitlyn" || Name == "Jinx" || Name == "Viktor" )
                     {
-                        health = 4;
+                        Health = 4;
                     }
                     else
                     {
-                        health = 5;
+                        Health = 5;
                     }
                     System.Console.WriteLine(asciiArt.deathmessage);
 

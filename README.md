@@ -11,7 +11,11 @@
             ██╔══██╗██║   ██║██║╚██╗██║██║╚██╗██║██╔══╝  ██╔══██╗╚════██║
             ██║  ██║╚██████╔╝██║ ╚████║██║ ╚████║███████╗██║  ██║███████║
             ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═══╝╚═╝  ╚═══╝╚══════╝╚═╝  ╚═╝╚══════╝
-This repository hosts the code and resources for a first-year college project: a maze game developed in C#. Created as part of Programming I course, the project demonstrates foundational programming skills in C# and explores concepts in game design and logic.
+This repository hosts the code and resources for a first-year college project: a maze game developed in C#. Created as part of a Programming course, the project demonstrates foundational programming skills in C# and explores concepts in game design and logic.
+
+## Demo
+
+![Demo of the Game](./alpha/Demo.gif)
 
 
 
@@ -42,4 +46,8 @@ This repository hosts the code and resources for a first-year college project: a
 | Randomize traps and objects   | <span style="color:green">Done</span> | Medium     |                                                                       |
 | Skills and Cooldowns          | <span style="color:green">Done</span> | High       | **Vi: Lucky Charm** - There is a 1 in 1000 chance to be teleported to the exit<br>**Calibre: Mercy** - There is a 50% chance that if health reaches 0, a health point is granted<br>**Jayce: Heal** - Gains +1 health every 5 turns<br>**Viktor: Sprint** - Gains +1 to dice throw every 5 turns<br>**Jinx: Tap Diasm** - Can disarm all traps |
 
+# 🔗 Useful Links
 
+- **[Maze Generation Algorithms](https://en.wikipedia.org/wiki/Maze_generation_algorithm)**: Explore various algorithms used for generating mazes, including Depth-First Search, Prim's algorithm, and more.  
+- **[Depth-First Search (DFS)](https://en.wikipedia.org/wiki/Depth-first_search)**: Learn more about the Depth-First Search algorithm, which is used for maze generation in this project.  
+- **[ASCII Art Maze Generator](https://www.asciiart.eu/ascii-maze-generator)**: Explore ASCII art mazes for inspiration or reference in maze design.  
