@@ -15,7 +15,7 @@ This repository hosts the code and resources for a first-year college project: a
 
 ## Demo
 
-![Demo of the Game](./alpha/Demo.gif)
+![Demo of the Game](./alpha/DEMOX.gif)
 
 
 

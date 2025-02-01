@@ -31,7 +31,7 @@
             Token[] tokens = new Token [2];
 
             //!I used initials for the skills because different legths break the UI
-            Token token1 = new Token("V",1,2,"VI",0,5,0,"LC");
+            Token token1 = new Token("V",(Height/2),(Width/2),"VI",0,5,0,"LC");
             Token token2 = new Token("C",(Height/2)-1,(Width/2),"Caitlyn",0,4,0,"MC");
             Token token3 = new Token("J",(Height/2)-2,(Width/2),"Jayce",0,5,0,"HL"); 
             Token token4 = new Token("K",(Height/2)-3,(Width/2),"Viktor",0,4,0,"SP"); //? 
@@ -61,7 +61,7 @@
             }
             Console.Clear();
             System.Console.WriteLine(asciiArt.YOUWON);
-
+            Console.ReadKey(true);
         }
         public static void ShowWelcomeScreen()
         {
